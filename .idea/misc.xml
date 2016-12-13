@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleLocalSettings">
+    <option name="modificationStamps">
+      <map>
+        <entry key="D:/GIT/CircularProgressBar" value="5877738938914" />
+        <entry key="D:/GIT/ColorfulNews" value="5921215176614" />
+        <entry key="D:/GIT/FlowGeek" value="10320999866629" />
+        <entry key="D:/GIT/GameNews" value="4412960607779" />
+        <entry key="D:/GIT/HiveLayoutManager" value="5897755970007" />
+        <entry key="D:/GIT/Interessant" value="5910574388776" />
+        <entry key="D:/GIT/OhMyBiliBili" value="4420933071631" />
+        <entry key="D:/GIT/RxjavaRetrofitDemo-master" value="4407247117988" />
+        <entry key="D:/GIT/YPWGame" value="4432385593114" />
+        <entry key="D:/GIT/awesome_android_rxjava" value="4437800715875" />
+        <entry key="D:/github/AndroidChromium" value="11746539099667" />
+      </map>
+    </option>
+    <option name="externalProjectsViewState">
+      <projects_view />
+    </option>
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" default="true" assert-keyword="true" jdk-15="true">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>

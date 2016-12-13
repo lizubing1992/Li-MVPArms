@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="AutoTabLayout"><attr format="boolean" name="auto_textSize_base_width"/></declare-styleable>
+    <string name="app_name">arms</string>
+</resources>

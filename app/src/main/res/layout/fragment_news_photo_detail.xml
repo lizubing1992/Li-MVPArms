@@ -1,0 +1,31 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.kaku.colorfulnews.mvp.ui.fragment.PhotoDetailFragment">
+
+    <photoview.PhotoView
+        android:id="@+id/photo_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <me.jessyan.mvparms.demo.widget.CircularProgressBar
+        android:id="@+id/loading"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:indeterminate="true"
+        android:layout_gravity="center"
+        android:indeterminateOnly="false"
+        android:layout_centerInParent="true"
+        app:cpb_color="@color/red"/>
+    <TextView
+        android:id="@+id/level"
+        android:layout_gravity="center"
+        android:text="0%"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/red"
+        />
+
+</FrameLayout>

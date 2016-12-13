@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:scrollbars="none"
+    android:background="@color/black_margin"
+    >
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            >
+
+            <ImageView
+                android:id="@+id/tv_game_time"
+                android:layout_marginTop="@dimen/space_10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/ic_code"
+                />
+        </RelativeLayout>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_marginTop="@dimen/dimen_15"
+    android:background="@color/white"
+    android:paddingLeft="@dimen/dimen_15"
+    android:paddingTop="@dimen/dimen_5"
+    android:paddingBottom="@dimen/dimen_5"
+    android:layout_height="wrap_content">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="当前版本"
+        android:layout_centerVertical="true"
+        android:textColor="@color/yello_comicer"
+        android:textSize="@dimen/main_text_size_large" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="v1.0.0"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:textColor="@color/yello_comicer"
+        android:textSize="@dimen/main_text_size_normal" />
+</LinearLayout>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/ll_author"
+    android:layout_marginTop="@dimen/dimen_15"
+    android:background="@color/white"
+    android:paddingLeft="@dimen/dimen_15"
+    android:paddingTop="@dimen/dimen_5"
+    android:paddingBottom="@dimen/dimen_5"
+    android:layout_height="wrap_content">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="关于作者"
+        android:layout_centerVertical="true"
+        android:textColor="@color/yello_comicer"
+        android:textSize="@dimen/main_text_size_large" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="https://github.com/lizubing1992"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:textColor="@color/yello_comicer"
+        android:textSize="@dimen/main_text_size_normal" />
+</LinearLayout>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_marginTop="@dimen/dimen_15"
+    android:background="@color/white"
+    android:paddingLeft="@dimen/dimen_15"
+    android:paddingTop="@dimen/dimen_5"
+    android:id="@+id/ll_mainPage"
+    android:paddingBottom="@dimen/dimen_5"
+    android:layout_height="wrap_content">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="项目主页"
+        android:layout_centerVertical="true"
+        android:textColor="@color/yello_comicer"
+        android:textSize="@dimen/main_text_size_large" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="https://github.com/lizubing1992"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:textColor="@color/yello_comicer"
+        android:textSize="@dimen/main_text_size_normal" />
+</LinearLayout>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_marginTop="@dimen/dimen_15"
+    android:background="@color/white"
+    android:paddingLeft="@dimen/dimen_15"
+    android:paddingTop="@dimen/dimen_5"
+    android:id="@+id/ll_introduce"
+    android:paddingBottom="@dimen/dimen_5"
+    android:layout_height="wrap_content">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="项目介绍"
+        android:layout_centerVertical="true"
+        android:textColor="@color/yello_comicer"
+        android:textSize="@dimen/main_text_size_large" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:textColor="@color/yello_comicer"
+        android:textSize="@dimen/main_text_size_normal" />
+</LinearLayout>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_marginTop="@dimen/dimen_15"
+    android:background="@color/white"
+    android:paddingLeft="@dimen/dimen_15"
+    android:id="@+id/ll_demonstrate"
+    android:paddingTop="@dimen/dimen_5"
+    android:paddingBottom="@dimen/dimen_5"
+    android:layout_height="wrap_content">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="开源项目说明"
+        android:layout_centerVertical="true"
+        android:textColor="@color/yello_comicer"
+        android:textSize="@dimen/main_text_size_large" />
+    <TextView
+        android:id="@+id/tv_comcer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:textColor="@color/yello_comicer"
+        android:textSize="@dimen/main_text_size_normal" />
+</LinearLayout>
+
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

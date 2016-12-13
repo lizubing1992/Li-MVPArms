@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context="me.jessyan.mvparms.demo.mvp.ui.activity.MainActivity">
+    <!--<android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:elevation="0dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.Toolbar xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/space_40"
+                android:background="?attr/colorPrimary"
+                android:minHeight="@dimen/space_40"
+                android:theme="@style/AppToolBar"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="图片浏览"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_18" />
+        </FrameLayout>
+
+    </android.support.design.widget.AppBarLayout>-->
+    <include layout="@layout/content_main" />
+</LinearLayout>

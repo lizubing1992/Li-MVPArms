@@ -1,0 +1,46 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowAnimationStyle">@style/ActivityTransitions</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="action_bar">
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+    </style>
+    <!--tool bar 设置属性-->
+    <style name="AppToolBar">
+        <item name="actionMenuTextColor">#ffe6e4</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+
+    <!-- Activity切换动画 -->
+    <style name="ActivityTransitions" parent="@android:style/Animation">
+        <item name="android:activityOpenEnterAnimation">@anim/activity_open_enter_slide_in_left
+        </item>
+        <item name="android:activityOpenExitAnimation">@anim/activity_open_exit_fade_back</item>
+        <item name="android:activityCloseEnterAnimation">@anim/activity_close_enter_fade_forward
+        </item>
+        <item name="android:activityCloseExitAnimation">@anim/activity_close_exit_slide_out_right
+        </item>
+    </style>
+    <!--新闻频道-->
+    <style name="news_summary_card_view">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:layout_marginRight">4dp</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+    </style>
+</resources>

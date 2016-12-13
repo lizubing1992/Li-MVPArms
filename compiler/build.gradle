@@ -1,0 +1,35 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+group='com.github.VictorAlbertos'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+dependencies {
+    //compile files("${System.properties['java.home']}/../lib/tools.jar")
+    compile files(org.gradle.internal.jvm.Jvm.current().getToolsJar())
+
+    compile project(':core')
+    compile project(':runtime')
+
+    compile 'com.google.auto.service:auto-service:1.0-rc2'
+    compile 'com.squareup:javapoet:1.6.1'
+
+    testCompile "junit:junit:4.12"
+    testCompile "com.google.testing.compile:compile-testing:0.9"
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}

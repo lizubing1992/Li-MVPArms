@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="48dp"
+    android:gravity="center"
+    android:paddingTop="@dimen/space_2"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/containerLL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp" >
+
+        <ImageView
+            android:src="@mipmap/ic_discover_checked"
+            android:id="@+id/iconIV"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:contentDescription="@null"
+            android:focusable="false" />
+
+    </LinearLayout>
+
+    <TextView
+        android:text="理财"
+        android:textColor="@drawable/selector_index_tab_text"
+        android:id="@+id/tabTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_1"
+        android:textSize="@dimen/text_size_11" />
+
+</LinearLayout>
