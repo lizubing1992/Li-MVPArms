@@ -74,7 +74,7 @@ public class UserFragment extends BaseFragment {
         llMainPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showWebView("项目主页","https://github.com/lizubing1992");
+                showWebView("项目主页","https://github.com/lizubing1992/Li-MVPArms");
             }
         });
         llIntroduce.setOnClickListener(new View.OnClickListener() {
