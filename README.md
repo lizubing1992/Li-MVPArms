@@ -1,4 +1,5 @@
-# MVPArms 
+# Li-MVPArms 
+# 这个项目是基于MVPArms开发的，修改RxCache源码，增加先请求网络，如果失败使用缓存，成功使用最新数据，熟练MVP模式，dagger2,Rxjava+Retrofit开发，接口基于天狗云，主要实现了查看新闻，查看福利图片功能，
 [![License](http://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](http://www.apache.org/licenses/LICENSE-2.0)
 [![API](https://img.shields.io/badge/API-15%2B-blue.svg?style=flat-square)](https://developer.android.com/about/versions/android-4.0.3.html)
 
