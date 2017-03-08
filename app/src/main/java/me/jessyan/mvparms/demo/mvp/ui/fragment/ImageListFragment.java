@@ -18,6 +18,7 @@ import com.paginate.Paginate;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.jessyan.mvparms.demo.R;
+import me.jessyan.mvparms.demo.app.WEApplication;
 import me.jessyan.mvparms.demo.di.component.AppComponent;
 import me.jessyan.mvparms.demo.di.component.DaggerImageListComponent;
 import me.jessyan.mvparms.demo.di.module.ImageListModule;
@@ -77,16 +78,6 @@ public class ImageListFragment extends WEFragment<ImageListPresenter> implements
                 .inject(this);
     }
 
-    @Override
-    protected View initView() {
-        Bundle bundle = getArguments();
-        if(null != bundle) {
-            id = bundle.getInt("id", 1);
-            cacheName = bundle.getString("cacheName");
-        }
-        return LayoutInflater.from(getActivity()).inflate(R.layout.activity_user, null, false);
-    }
-
     /**
      * 初始化RecycleView
      */
@@ -96,7 +87,12 @@ public class ImageListFragment extends WEFragment<ImageListPresenter> implements
     }
 
     @Override
-    protected void initData() {
+    protected void loadData() {
+        Bundle bundle = getArguments();
+        if(null != bundle) {
+            id = bundle.getInt("id", 1);
+            cacheName = bundle.getString("cacheName");
+        }
        if(id == 1) {
         mPresenter.requestImageList(cacheName, id, true);
       }
@@ -156,7 +152,7 @@ public class ImageListFragment extends WEFragment<ImageListPresenter> implements
     @Override
     public void showMessage(@NonNull String message) {
         checkNotNull(message);
-        UiUtils.SnackbarText(message);
+        WEApplication.showToast(message);
     }
 
     @Override
@@ -227,9 +223,7 @@ public class ImageListFragment extends WEFragment<ImageListPresenter> implements
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        ButterKnife.bind(this, rootView);
-        return rootView;
+    protected int getLayoutId() {
+        return R.layout.activity_user;
     }
 }

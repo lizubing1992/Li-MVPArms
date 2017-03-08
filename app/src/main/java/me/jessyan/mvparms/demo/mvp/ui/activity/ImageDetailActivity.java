@@ -17,6 +17,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.jessyan.mvparms.demo.R;
+import me.jessyan.mvparms.demo.app.WEApplication;
 import me.jessyan.mvparms.demo.di.component.AppComponent;
 import me.jessyan.mvparms.demo.di.component.DaggerImageDetailComponent;
 import me.jessyan.mvparms.demo.di.module.ImageDetailModule;
@@ -69,14 +70,10 @@ public class ImageDetailActivity extends WEActivity<ImageDetailPresenter> implem
                 .inject(this);
     }
 
-    @Override
-    protected View initView() {
-        id = getIntent().getIntExtra("imageDetailId", 1);
-        return LayoutInflater.from(this).inflate(R.layout.activity_image_detail, null, false);
-    }
 
     @Override
-    protected void initData() {
+    protected void loadData() {
+        id = getIntent().getIntExtra("imageDetailId", 1);
         setupBackIcon(toolbar);
         mPresenter.requestImageDetail(id);
     }
@@ -96,7 +93,7 @@ public class ImageDetailActivity extends WEActivity<ImageDetailPresenter> implem
     @Override
     public void showMessage(@NonNull String message) {
         checkNotNull(message);
-        UiUtils.SnackbarText(message);
+        WEApplication.showToast(message);
     }
 
     @Override
@@ -115,6 +112,11 @@ public class ImageDetailActivity extends WEActivity<ImageDetailPresenter> implem
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_image_detail;
     }
 
     @Override

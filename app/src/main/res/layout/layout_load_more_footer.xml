@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/loadingLL"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/load_more_height"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <!--<ProgressBar
+            android:layout_width="@dimen/small_circle_progress_bar_size"
+            android:layout_height="@dimen/small_circle_progress_bar_size"/>-->
+
+        <me.jessyan.mvparms.demo.widget.CircularProgressBar
+            android:layout_width="17dp"
+            android:layout_height="17dp"
+            android:indeterminate="true"
+            android:indeterminateOnly="false"
+            app:cpb_color="#ff7575"
+            app:cpb_stroke_width="1.7dp" />
+
+        <TextView
+            android:id="@+id/loadingTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/space10"
+            android:text="@string/loading"
+            android:textColor="@color/darkgray"
+            android:textSize="@dimen/font_size_small" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/noMoreTV"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/load_more_height"
+        android:gravity="center"
+        android:text="@string/loading_no_more"
+        android:textColor="@color/darkgray"
+        android:textSize="@dimen/font_size_small"
+        android:visibility="invisible" />
+
+</FrameLayout>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/appbar"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/action_bar_size"
+    app:elevation="0dp">
+
+    <FrameLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
+
+        <android.support.v7.widget.Toolbar
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:background="?attr/colorPrimary"
+            android:id="@+id/toolbar"
+            android:layout_height="@dimen/action_bar_size"
+            android:layout_width="match_parent"
+            android:minHeight="@dimen/action_bar_size"
+            android:theme="@style/AppToolBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+        <TextView
+            android:paddingRight="@dimen/toolbar_title_padding"
+            android:paddingLeft="@dimen/toolbar_title_padding"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:id="@+id/toolbarTitleTV"
+            android:textSize="@dimen/font_size_large"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <View
+            android:layout_gravity="bottom"
+            android:id="@+id/toolbar_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.2dp"
+            android:background="#d65050"/>
+
+    </FrameLayout>
+
+</android.support.design.widget.AppBarLayout>
+
+
+
+
+

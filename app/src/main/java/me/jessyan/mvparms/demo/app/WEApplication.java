@@ -149,7 +149,8 @@ public class WEApplication extends BaseApplication {
             @Override
             public void handleResponseError(Context context, Exception e) {
                 Timber.tag(TAG).w("------------>" + e.getMessage());
-                UiUtils.SnackbarText("net error");
+                WEApplication.showToast("net error");
+//                UiUtils.SnackbarText("net error");
             }
         };
     }

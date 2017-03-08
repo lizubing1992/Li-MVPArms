@@ -50,13 +50,9 @@ public class WebViewActivity extends WEActivity<BasePresenter> {
 
     }
 
-    @Override
-    protected View initView() {
-        return LayoutInflater.from(this).inflate(R.layout.activity_webview, null, false);
-    }
 
     @Override
-    protected void initData() {
+    protected void loadData() {
         title = getIntent().getStringExtra("title");
         url = getIntent().getStringExtra("url");
         webLoadPB = (ProgressBar) findViewById(R.id.webLoadPB);
@@ -100,6 +96,11 @@ public class WebViewActivity extends WEActivity<BasePresenter> {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_webview;
     }
 
     @Override

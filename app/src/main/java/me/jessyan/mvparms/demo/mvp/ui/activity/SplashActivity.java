@@ -13,6 +13,7 @@ import com.jess.arms.utils.UiUtils;
 
 import butterknife.BindView;
 import me.jessyan.mvparms.demo.R;
+import me.jessyan.mvparms.demo.app.WEApplication;
 import me.jessyan.mvparms.demo.di.component.AppComponent;
 import me.jessyan.mvparms.demo.di.component.DaggerSplashComponent;
 import me.jessyan.mvparms.demo.di.module.SplashModule;
@@ -55,13 +56,9 @@ public class SplashActivity extends WEActivity<SplashPresenter> implements Splas
                 .inject(this);
     }
 
-    @Override
-    protected View initView() {
-        return LayoutInflater.from(this).inflate(R.layout.activity_splash, null, false);
-    }
 
     @Override
-    protected void initData() {
+    protected void loadData() {
         mPresenter.initialized();
     }
 
@@ -79,7 +76,8 @@ public class SplashActivity extends WEActivity<SplashPresenter> implements Splas
     @Override
     public void showMessage(@NonNull String message) {
         checkNotNull(message);
-        UiUtils.SnackbarText(message);
+        WEApplication.showToast(message);
+//        UiUtils.SnackbarText(message);
     }
 
     @Override
@@ -118,5 +116,10 @@ public class SplashActivity extends WEActivity<SplashPresenter> implements Splas
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_splash;
     }
 }

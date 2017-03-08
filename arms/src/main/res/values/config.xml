@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ptr -->
+    <item name="ptr_duration_to_close" type="integer">400</item>
+    <item name="ptr_duration_to_close_header" type="integer">800</item>
+    <item name="ptr_keep_header_when_refresh" type="bool">true</item>
+    <item name="ptr_pull_to_fresh" type="bool">false</item>
+    <item name="ptr_ratio_of_header_height_to_refresh" type="dimen">1.2</item>
+    <item name="ptr_resistance" type="dimen">1.8</item>
+    
+</resources>

@@ -58,6 +58,7 @@ dependencies {
     compile rootProject.ext.dependencies["dagger2"]
     compile rootProject.ext.dependencies["okhttp3"]
     compile rootProject.ext.dependencies["timber"]
+    compile 'in.srain.cube:ultra-ptr:1.0.11'
 //    compile rootProject.ext.dependencies["glide"]
     apt rootProject.ext.dependencies["dagger2-apt-compiler"]
     compile project(':rxerrorhandler')

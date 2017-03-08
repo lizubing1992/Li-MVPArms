@@ -18,6 +18,7 @@ import com.paginate.Paginate;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.jessyan.mvparms.demo.R;
+import me.jessyan.mvparms.demo.app.WEApplication;
 import me.jessyan.mvparms.demo.di.component.AppComponent;
 import me.jessyan.mvparms.demo.di.component.DaggerNewsListComponent;
 import me.jessyan.mvparms.demo.di.module.NewsListModule;
@@ -80,16 +81,6 @@ public class NewsListFragment extends WEFragment<NewsListPresenter> implements N
                 .inject(this);
     }
 
-    @Override
-    protected View initView() {
-        Bundle bundle = getArguments();
-        if(null != bundle) {
-            id = bundle.getInt("id", 1);
-            cacheName = bundle.getString("cacheName");
-        }
-        return LayoutInflater.from(getActivity()).inflate(R.layout.activity_user, null, false);
-    }
-
 
     private boolean hasLoadOnce = false;
 
@@ -115,7 +106,12 @@ public class NewsListFragment extends WEFragment<NewsListPresenter> implements N
         configRecycleView(recyclerView, new LinearLayoutManager(getActivity()));
     }
     @Override
-    protected void initData() {
+    protected void loadData() {
+        Bundle bundle = getArguments();
+        if(null != bundle) {
+            id = bundle.getInt("id", 1);
+            cacheName = bundle.getString("cacheName");
+        }
         if(id == 1) {
             mPresenter.requestNewsList(cacheName, id, true);
         }
@@ -158,7 +154,8 @@ public class NewsListFragment extends WEFragment<NewsListPresenter> implements N
     @Override
     public void showMessage(@NonNull String message) {
         checkNotNull(message);
-        UiUtils.SnackbarText(message);
+        WEApplication.showToast(message);
+//        UiUtils.SnackbarText(message);
     }
 
     @Override
@@ -199,11 +196,8 @@ public class NewsListFragment extends WEFragment<NewsListPresenter> implements N
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // TODO: inflate a fragment view
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        ButterKnife.bind(this, rootView);
-        return rootView;
+    protected int getLayoutId() {
+        return R.layout.activity_user;
     }
 
 

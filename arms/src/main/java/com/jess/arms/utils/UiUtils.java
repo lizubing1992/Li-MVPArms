@@ -215,31 +215,6 @@ public class UiUtils {
         mToast.show();
     }
 
-    /**
-     * 用snackbar显示
-     *
-     * @param text
-     */
-    public static void SnackbarText(String text) {
-        Intent intent = new Intent(BaseActivity.ACTION_RECEIVER_ACTIVITY);
-        intent.putExtra("type", "showSnackbar");
-        intent.putExtra("content", text);
-        intent.putExtra("long", false);
-        getContext().sendBroadcast(intent);
-    }
-
-    /**
-     * 用snackbar长时间显示
-     *
-     * @param text
-     */
-    public static void SnackbarTextWithLong(String text) {
-        Intent intent = new Intent(BaseActivity.ACTION_RECEIVER_ACTIVITY);
-        intent.putExtra("type", "showSnackbar");
-        intent.putExtra("content", text);
-        intent.putExtra("long", true);
-        getContext().sendBroadcast(intent);
-    }
 
 
     /**
@@ -252,41 +227,7 @@ public class UiUtils {
         return getResources().getDrawable(rID);
     }
 
-    /**
-     * 跳转界面
-     *
-     * @param activity
-     * @param homeActivityClass
-     */
-    public static void startActivity(Activity activity, Class homeActivityClass) {
-        Intent intent = new Intent(getContext(), homeActivityClass);
-        activity.startActivity(intent);
-    }
 
-    /**
-     * 跳转界面3
-     *
-     * @param
-     * @param homeActivityClass
-     */
-    public static void startActivity(Class homeActivityClass) {
-        Intent intent = new Intent(getContext(), homeActivityClass);
-        startActivity(intent);
-    }
-
-    /**
-     * 跳转界面3
-     *
-     * @param
-     */
-    public static void startActivity(Intent content) {
-        Intent intent = new Intent(BaseActivity.ACTION_RECEIVER_ACTIVITY);
-        intent.putExtra("type", "startActivity");
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("content", content);
-        intent.putExtras(bundle);
-        getContext().sendBroadcast(intent);
-    }
 
     /**
      * 跳转界面4

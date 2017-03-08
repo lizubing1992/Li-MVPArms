@@ -38,20 +38,8 @@ public class UserFragment extends BaseFragment {
     }
 
     @Override
-    protected View initView() {
-        return LayoutInflater.from(getActivity()).inflate(R.layout.fragment_user, null, false);
-    }
-
-    @Override
-    protected void initData() {
-
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        ButterKnife.bind(this, rootView);
-        return rootView;
+    protected int getLayoutId() {
+        return R.layout.fragment_user;
     }
 
 

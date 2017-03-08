@@ -87,13 +87,9 @@ public class NewsDetailActivity extends WEActivity<NewsDetailPresenter> implemen
                 .inject(this);
     }
 
-    @Override
-    protected View initView() {
-        return LayoutInflater.from(this).inflate(R.layout.activity_new_detail, null, false);
-    }
 
     @Override
-    protected void initData() {
+    protected void loadData() {
         int newsId = getIntent().getIntExtra("newsId", 1);
         setupBackIcon(toolbar);
         mPresenter.getNewsDetail(newsId);
@@ -113,7 +109,7 @@ public class NewsDetailActivity extends WEActivity<NewsDetailPresenter> implemen
     @Override
     public void showMessage(@NonNull String message) {
         checkNotNull(message);
-        UiUtils.SnackbarText(message);
+        WEApplication.showToast(message);
     }
 
     @Override
@@ -175,6 +171,11 @@ public class NewsDetailActivity extends WEActivity<NewsDetailPresenter> implemen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_new_detail;
     }
 
     @Override

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <!--tool bar 设置属性-->
+  <style name="AppToolBar">
+    <item name="actionMenuTextColor">#ffe6e4</item>
+    <item name="android:textSize">14sp</item>
+  </style>
+  <!-- Loading对话框Style -->
+  <style name="LoadProgressStyle" parent="@android:style/Theme.Dialog">
+    <item name="android:colorBackgroundCacheHint">@null</item>
+    <item name="android:windowFrame">@null</item>
+    <item name="android:windowIsFloating">true</item>
+    <item name="android:windowIsTranslucent">true</item>
+    <item name="android:windowNoTitle">true</item>
+    <item name="android:background">@color/transparent</item>
+    <item name="android:windowBackground">@color/transparent</item>
+  </style>
+  <!-- 默认提示对话框style -->
+  <style name="AlertDialogStyle" parent="@android:style/Theme.Dialog">
+    <item name="android:windowBackground">@android:color/transparent</item>
+    <item name="android:windowContentOverlay">@null</item>
+    <item name="android:windowIsFloating">true</item>
+    <item name="android:windowFrame">@null</item>
+    <item name="android:backgroundDimEnabled">true</item>
+    <item name="android:windowNoTitle">true</item>
+    <item name="android:windowIsTranslucent">true</item>
+  </style>
+  <!--AlertDialog 进入动画-->
+  <style name="alertAnim" mce_bogus="1" parent="android:Animation">
+    <item name="android:windowEnterAnimation">@anim/alert_dialog_in</item>
+  </style>
+
+</resources>

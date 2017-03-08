@@ -50,6 +50,12 @@ public class ImageFragment extends WEFragment {
     ViewPager viewPager;
     private CommonNavigator mCommonNavigator;
     private List<String> mDataList = Arrays.asList(CHANNELS);
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.fragment_image;
+    }
+
     @Override
     protected void ComponentInject() {
 
@@ -61,12 +67,7 @@ public class ImageFragment extends WEFragment {
     }
 
     @Override
-    protected View initView() {
-        return LayoutInflater.from(getActivity()).inflate(R.layout.fragment_image, null, false);
-    }
-
-    @Override
-    protected void initData() {
+    protected void loadData() {
         AdapterViewPager adapterViewPager = new AdapterViewPager(getChildFragmentManager());
         adapterViewPager.bindData(initFragments(), CHANNELS);
         viewPager.setAdapter(adapterViewPager);

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.jessyan.mvparms.demo.R;
+import me.jessyan.mvparms.demo.app.WEApplication;
 import me.jessyan.mvparms.demo.mvp.ui.fragment.ImageFragment;
 import me.jessyan.mvparms.demo.mvp.ui.fragment.ImageListFragment;
 import me.jessyan.mvparms.demo.mvp.ui.fragment.NewsFragment;
@@ -35,13 +36,9 @@ public class MainActivity extends BaseActivity implements BottomNavigationBar.On
 
     }
 
-    @Override
-    protected View initView() {
-        return LayoutInflater.from(this).inflate(R.layout.activity_main, null, false);
-    }
 
     @Override
-    protected void initData() {
+    protected void loadData() {
         bottomNavigationBar.setMode(BottomNavigationBar.MODE_FIXED);
         bottomNavigationBar
                 .setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_STATIC
@@ -63,10 +60,15 @@ public class MainActivity extends BaseActivity implements BottomNavigationBar.On
     }
 
     @Override
+    protected int getLayoutId() {
+        return R.layout.activity_main;
+    }
+
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
          if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
                 if ((System.currentTimeMillis() - DOUBLE_CLICK_TIME) > 2000) {
-                    UiUtils.SnackbarText(getString(R.string.double_click_exit));
+                    WEApplication.showToast(R.string.double_click_exit);
                     DOUBLE_CLICK_TIME = System.currentTimeMillis();
                 } else {
                     finish();

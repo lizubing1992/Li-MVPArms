@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/loadingLL"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryWindowBg"
+    android:clickable="true"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <FrameLayout
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_marginBottom="@dimen/space9">
+
+        <ImageView
+            android:id="@+id/loadingView"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:alpha="0.9"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/loadingStateIV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:alpha="0.75"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_sorry"
+            android:visibility="gone" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="50dp">
+
+        <com.yhqz.onepurse.common.view.shimmer.ShimmerTextView
+            android:id="@+id/loadingHintTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center_horizontal"
+            android:lineSpacingExtra="@dimen/space4"
+            android:paddingLeft="@dimen/space6"
+            android:paddingRight="@dimen/space6"
+            android:text="加载中..."
+            android:textColor="@color/loading_text_color"
+            android:textSize="14sp"
+            app:reflectionColor="@color/loading_shimmer_color" />
+
+    </FrameLayout>
+
+    <!--<ProgressBar
+        android:id="@+id/loadingPB"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_above="@id/loadingHintTV"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="@dimen/space8"
+        android:indeterminate="false"
+        android:indeterminateDrawable="@anim/loading_activity" />-->
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/space11"
+            android:text="www.yhqz.com"
+            android:textColor="@color/divider_color_gray2"
+            android:textSize="13sp"
+            android:textStyle="italic" />
+
+    </FrameLayout>
+
+</LinearLayout>

@@ -1,79 +1,34 @@
 package com.jess.arms.base;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
-import android.util.AttributeSet;
 import android.view.View;
-
-import com.jess.arms.mvp.BasePresenter;
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
-import com.zhy.autolayout.AutoFrameLayout;
-import com.zhy.autolayout.AutoLinearLayout;
-import com.zhy.autolayout.AutoRelativeLayout;
-
-import org.simple.eventbus.EventBus;
-
-import java.util.LinkedList;
-
-import javax.inject.Inject;
-
+import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import com.jess.arms.R;
+import com.jess.arms.mvp.BasePresenter;
+import com.jess.arms.utils.LogUtils;
+import com.jess.arms.widget.DefaultAlertDialog;
+import com.jess.arms.widget.customhead.CustomPtrHeader;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+import in.srain.cube.views.ptr.PtrClassicFrameLayout;
+import in.srain.cube.views.ptr.PtrDefaultHandler;
+import in.srain.cube.views.ptr.PtrFrameLayout;
+import in.srain.cube.views.ptr.PtrHandler;
+import javax.inject.Inject;
 
 public abstract class BaseActivity<P extends BasePresenter> extends RxAppCompatActivity {
     protected final String TAG = this.getClass().getSimpleName();
-    private BroadcastReceiver mBroadcastReceiver;
-    public static final String ACTION_RECEIVER_ACTIVITY = "com.jess.activity";
-    protected BaseApplication mApplication;
     @Inject
     protected P mPresenter;
-
-    private static final String LAYOUT_LINEARLAYOUT = "LinearLayout";
-    private static final String LAYOUT_FRAMELAYOUT = "FrameLayout";
-    private static final String LAYOUT_RELATIVELAYOUT = "RelativeLayout";
-    public static final String IS_NOT_ADD_ACTIVITY_LIST = "is_add_activity_list";//是否加入到activity的list，管理
     private Unbinder mUnbinder;
-
-
-    @Override
-    public View onCreateView(String name, Context context, AttributeSet attrs) {
-        View view = null;
-        if (name.equals(LAYOUT_FRAMELAYOUT)) {
-            view = new AutoFrameLayout(context, attrs);
-        }
-
-        if (name.equals(LAYOUT_LINEARLAYOUT)) {
-            view = new AutoLinearLayout(context, attrs);
-        }
-
-        if (name.equals(LAYOUT_RELATIVELAYOUT)) {
-            view = new AutoRelativeLayout(context, attrs);
-        }
-
-        if (view != null) return view;
-
-        return super.onCreateView(name, context, attrs);
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        registReceiver();//注册广播
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregistReceriver();
-    }
+    protected TextView toolbarTitleTV; //标题f
+    protected Toolbar toolbar;
+    protected PtrClassicFrameLayout ptr;
+    protected Context mContext;
 
     /**
      * inflate布局
@@ -85,138 +40,246 @@ public abstract class BaseActivity<P extends BasePresenter> extends RxAppCompatA
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mApplication = (BaseApplication) getApplication();
-        //如果intent包含了此字段,并且为true说明不加入到list
-        // 默认为false,如果不需要管理(比如不需要在退出所有activity(killAll)时，退出此activity就在intent加此字段为true)
-        boolean isNotAdd = getIntent().getBooleanExtra(IS_NOT_ADD_ACTIVITY_LIST, false);
-        synchronized (BaseActivity.class) {
-            if (!isNotAdd)
-                mApplication.getActivityList().add(this);
-        }
-        if (useEventBus())//如果要使用eventbus请将此方法返回true
-            EventBus.getDefault().register(this);//注册到事件主线
-        setContentView(initView());
+        this.mContext = this;
+        setContentView(getLayoutId());
         //绑定到butterknife
         mUnbinder = ButterKnife.bind(this);
         ComponentInject();//依赖注入
-        initData();
+        initViews(savedInstanceState);//初始化页面控件
+        setupBackIcon();//设置返回按钮
+        initPtr();//初始化下拉刷新
         setListener();
+        setOnItemClickListener();
+        loadData();//加载数据
+        initRxBus();
     }
 
-    protected  void setListener(){};
+    protected void initViews(Bundle savedInstanceState) {
+
+    }
+
+    protected void initRxBus() {
+
+    }
+    /**
+     * 加载数据
+     */
+    protected void loadData() {
+
+    }
+
+    protected void setOnItemClickListener() {
+
+    }
+
+    protected abstract int getLayoutId();
+
+    /**
+     * 初始化pull to refresh layout
+     */
+    protected void initPtr() {
+
+        ptr = (PtrClassicFrameLayout) findViewById(R.id.ptr);
+
+        if (ptr != null) {
+            // 创建material风格的下拉头部
+          /*  MaterialHeader header = new MaterialHeader(this);
+            int[] colors = getResources().getIntArray(R.array.ptr_color_array);
+            header.setColorSchemeColors(colors);
+            header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
+            header.setPadding(0, DeviceUtils.dp2px(this, 15), 0, DeviceUtils.dp2px(this, 15));*/
+
+            //创建自定义风格的下拉头部
+            CustomPtrHeader header = new CustomPtrHeader(mContext);
+
+            // 设置刷新头部view
+            ptr.setHeaderView(header);
+            // 设置回调
+            ptr.addPtrUIHandler(header);
+            // 设置下拉刷新监听
+            ptr.setPtrHandler(new PtrHandler() {
+
+                @Override
+                public void onRefreshBegin(PtrFrameLayout frame) {
+                    refreshData();
+                }
+
+                @Override
+                public boolean checkCanDoRefresh(PtrFrameLayout frame,
+                    View content, View header) {
+                    return isCanDoRefresh(frame, content, header);
+                }
+            });
+        }
+    }
+
+    /**
+     * 判断UI是否满足下拉刷新的下拉条件
+     */
+    protected boolean isCanDoRefresh(PtrFrameLayout frame,
+        View content, View header) {
+        return PtrDefaultHandler.checkContentCanBePulledDown(frame, content, header);
+    }
 
 
     /**
-     * 依赖注入的入口
+     * 刷新数据
      */
-    protected abstract void ComponentInject();
+    protected void refreshData() {
 
+    }
 
-    public void FullScreencall() {
-        if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
-            View v = this.getWindow().getDecorView();
-            v.setSystemUiVisibility(View.GONE);
-        } else if (Build.VERSION.SDK_INT >= 19) {
-            //for new api versions.
-            View decorView = getWindow().getDecorView();
-            int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-            decorView.setSystemUiVisibility(uiOptions);
+    /**
+     * 刷新结束
+     */
+    protected void refreshComplete() {
+        if (ptr != null && ptr.isRefreshing()) {
+            ptr.refreshComplete();
         }
     }
 
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        synchronized (BaseActivity.class) {
-            mApplication.getActivityList().remove(this);
-        }
-        if (mPresenter != null) mPresenter.onDestroy();//释放资源
-        if (mUnbinder != Unbinder.EMPTY) mUnbinder.unbind();
-        if (useEventBus())//如果要使用eventbus请将此方法返回true
-            EventBus.getDefault().unregister(this);
+    /**
+     * @return 返回false则不显示返回navigation icon
+     */
+    protected boolean isCanBack() {
+        return true;
     }
 
     /**
-     * 是否使用eventBus,默认为使用(true)，
-     *
-     * @return
+     * 设置返回按钮
      */
-    protected boolean useEventBus() {
-        return false;
-    }
-
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-
-    /**
-     * 注册广播
-     */
-    public void registReceiver() {
-        try {
-            mBroadcastReceiver = new ActivityReceriver();
-            IntentFilter filter = new IntentFilter(ACTION_RECEIVER_ACTIVITY);
-            registerReceiver(mBroadcastReceiver, filter);
-        } catch (Exception e) {
-            e.printStackTrace();
+    protected void setupBackIcon() {
+        if (isCanBack() && toolbar != null) {
+            toolbar.setNavigationIcon(R.drawable.ic_back_white);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finishActivity();
+                }
+            });
         }
     }
 
     protected void finishActivity() {
         finish();
     }
-
     /**
-     * 解除注册广播
+     * 选择返回
      */
-    public void unregistReceriver() {
-        if (mBroadcastReceiver == null) return;
-        try {
-            unregisterReceiver(mBroadcastReceiver);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+    protected void doBack() {
+        finish();
     }
 
-    protected abstract View initView();
+    protected  void setListener(){};
+    /**
+     * 依赖注入的入口
+     */
+    protected abstract void ComponentInject();
 
-    protected abstract void initData();
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mPresenter != null) {
+            mPresenter.onDestroy();//释放资源
+            mPresenter = null;
+        }
+        if (mUnbinder != Unbinder.EMPTY) {
+            mUnbinder.unbind();
+        }
+    }
+    /**
+     * 设置toolbar及标题
+     *
+     * @param title toolbar标题
+     */
+    protected void setToolbar(String title) {
+        try {
+            toolbar = (Toolbar) findViewById(R.id.toolbar);
+            if (toolbar != null && title != null) {
+                toolbar.setTitle("");
+                setSupportActionBar(toolbar);
+            }
+        } catch (Exception e) {
+            LogUtils.debugInfo("method \"setToolbar\" has exception");
+        }
+        setTitle(title);
+    }
+
+    public void setToolbar(int id) {
+        setToolbar(getString(id));
+    }
+    /**
+     * 设置activity标题
+     *
+     * @param title
+     */
+    public void setTitle(String title) {
+        try {
+            toolbarTitleTV = (TextView) findViewById(R.id.toolbarTitleTV);
+            if (toolbarTitleTV != null) {
+                toolbarTitleTV.setText(title);
+            }
+        } catch (Exception e) {
+            LogUtils.debugInfo("method \"setTitle\" has exception");
+        }
+    }
 
     /**
-     * 用于处理当前activity需要
+     * 标准消息提示框（带确定按钮）
+     *
+     * @param title      标题
+     * @param content    内容
+     * @param okListener 确定时点击事件
+     * @return
      */
-    class ActivityReceriver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null) {
-                switch (intent.getStringExtra("type")) {
-                    case "startActivity"://启动activity
-                        Intent content = intent.getExtras().getParcelable("content");
-                        startActivity(content);
-                        break;
-                    case "showSnackbar"://显示snackbar
-                        String text = intent.getStringExtra("content");
-                        boolean isLong = intent.getBooleanExtra("long", false);
-                        View view = BaseActivity.this.getWindow().getDecorView().findViewById(android.R.id.content);
-                        Snackbar.make(view, text, isLong ? Snackbar.LENGTH_LONG : Snackbar.LENGTH_SHORT).show();
-                        break;
-                    case "killAll":
-                        LinkedList<BaseActivity> copy;
-                        synchronized (BaseActivity.class) {
-                            copy = new LinkedList<BaseActivity>(mApplication.getActivityList());
-                        }
-                        for (BaseActivity baseActivity : copy) {
-                            baseActivity.finish();
-                        }
-                        //		android.os.Process.killProcess(android.os.Process.myPid());
-                        break;
-                }
-            }
-        }
+    public DefaultAlertDialog showMessageDialog(String title, String content, final View.OnClickListener okListener) {
+        final DefaultAlertDialog alertDialog = new DefaultAlertDialog(this).builder().setTitle(title);
+        alertDialog.setMsg(content)
+            .setPositiveButton("确定", okListener)
+            .setNegativeButton("取消", null).show();
+        return alertDialog;
+    }
+
+    /**
+     * 单个按钮的消息提示框
+     *
+     * @param title
+     * @param content
+     * @param okHint     按钮文字
+     * @param okListener 按钮触发的点击事件
+     * @return
+     */
+    public DefaultAlertDialog showMessageDialog(String title, String content, String okHint, final View.OnClickListener okListener) {
+        final DefaultAlertDialog alertDialog = new DefaultAlertDialog(this).builder().setTitle(title);
+        alertDialog.setMsg(content)
+            .setPositiveButton(okHint, okListener).show();
+        return alertDialog;
+    }
+
+    /**
+     * 显示消息提示框
+     *
+     * @param title          标题
+     * @param content        内容
+     * @param okHint         右边按钮文字
+     * @param cancelHint     左边按钮文字
+     * @param okListener     右边按钮事件
+     * @param cancelListener 左边按钮事件
+     * @return
+     */
+    public DefaultAlertDialog showMessageDialog(String title, String content, String okHint, String cancelHint, final View.OnClickListener okListener,
+        final View.OnClickListener cancelListener) {
+        final DefaultAlertDialog alertDialog = new DefaultAlertDialog(this).builder().setTitle(title);
+        alertDialog.setMsg(content)
+            .setPositiveButton(okHint, okListener)
+            .setNegativeButton(cancelHint, cancelListener).show();
+        return alertDialog;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
 }
