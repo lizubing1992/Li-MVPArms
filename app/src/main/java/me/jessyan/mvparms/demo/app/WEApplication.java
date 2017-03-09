@@ -1,18 +1,9 @@
 package me.jessyan.mvparms.demo.app;
 
 import android.content.Context;
-
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.jess.arms.base.BaseApplication;
 import com.jess.arms.http.GlobeHttpHandler;
-import com.jess.arms.utils.UiUtils;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import me.jessyan.mvparms.demo.BuildConfig;
 import me.jessyan.mvparms.demo.di.component.AppComponent;
 import me.jessyan.mvparms.demo.di.component.DaggerAppComponent;
@@ -32,7 +23,6 @@ import timber.log.Timber;
  */
 public class WEApplication extends BaseApplication {
     private AppComponent mAppComponent;
-    private RefWatcher mRefWatcher;//leakCanary观察器
 
     @Override
     public void onCreate() {
@@ -49,32 +39,11 @@ public class WEApplication extends BaseApplication {
             Timber.plant(new Timber.DebugTree());
         }
         Fresco.initialize(this, ConfigConstants.getImagePipelineConfig(this));
-        installLeakCanary();//leakCanary内存泄露检查
     }
 
     public static boolean isHavePhoto() {
         return MyUtils.getSharedPreferences().getBoolean(Constants.SHOW_NEWS_PHOTO, true);
     }
-
-
-    /**
-     * 安装leakCanary检测内存泄露
-     */
-    protected void installLeakCanary() {
-        this.mRefWatcher = BuildConfig.USE_CANARY ? LeakCanary.install(this) : RefWatcher.DISABLED;
-    }
-
-    /**
-     * 获得leakCanary观察器
-     *
-     * @param context
-     * @return
-     */
-    public static RefWatcher getRefWatcher(Context context) {
-        WEApplication application = (WEApplication) context.getApplicationContext();
-        return application.mRefWatcher;
-    }
-
 
     @Override
     public String getBaseUrl() {

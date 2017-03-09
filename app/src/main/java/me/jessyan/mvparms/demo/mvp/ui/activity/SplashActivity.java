@@ -80,17 +80,6 @@ public class SplashActivity extends WEActivity<SplashPresenter> implements Splas
 //        UiUtils.SnackbarText(message);
     }
 
-    @Override
-    public void launchActivity(@NonNull Intent intent) {
-        checkNotNull(intent);
-        UiUtils.startActivity(this, intent);
-    }
-
-    @Override
-    public void killMyself() {
-        finish();
-    }
-
 
     @Override
     public void animateBackgroundImage(Animation animation) {
@@ -107,7 +96,7 @@ public class SplashActivity extends WEActivity<SplashPresenter> implements Splas
     @Override
     public void navigateToHomePage() {
         startActivity(new Intent(this,MainActivity.class));
-        killMyself();
+        this.finish();
     }
 
     @Override

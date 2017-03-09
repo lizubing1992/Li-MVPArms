@@ -2,6 +2,7 @@ package me.jessyan.mvparms.demo.mvp.presenter;
 
 import android.app.Application;
 
+import com.jess.arms.base.Base2Adapter;
 import com.jess.arms.base.BaseFragment;
 import com.jess.arms.base.DefaultAdapter;
 import com.jess.arms.di.scope.ActivityScope;
@@ -44,8 +45,6 @@ public class NewsListPresenter extends BasePresenter<NewsListContract.Model, New
     private RxErrorHandler mErrorHandler;
     private Application mApplication;
     private RxPermissions mRxPermissions;
-    private List<NewsListEntity.TngouBean> mUsers = new ArrayList<>();
-    private DefaultAdapter mAdapter;
     private int page = 1;
 
     @Inject
@@ -55,8 +54,6 @@ public class NewsListPresenter extends BasePresenter<NewsListContract.Model, New
         this.mErrorHandler = handler;
         this.mApplication = application;
         this.mRxPermissions = rxPermissions;
-        mAdapter = new NewsListAdapter(mUsers);
-        mRootView.setAdapter(mAdapter);//设置Adapter
     }
 
     public void requestNewsList(String  cacheName,int id, final boolean isPullRefresh){
@@ -80,8 +77,6 @@ public class NewsListPresenter extends BasePresenter<NewsListContract.Model, New
                     public void call() {
                         if(isPullRefresh){
                             mRootView.showLoading();
-                        }else{
-                            mRootView.startLoadMore();
                         }
                     }
                 }).subscribeOn(AndroidSchedulers.mainThread())
@@ -91,8 +86,6 @@ public class NewsListPresenter extends BasePresenter<NewsListContract.Model, New
                     public void call() {
                         if(isPullRefresh){
                             mRootView.hideLoading();
-                        }else{
-                            mRootView.endLoadMore();
                         }
                     }
                 }).compose(((BaseFragment)mRootView).<NewsListEntity>bindToLifecycle())
@@ -100,11 +93,7 @@ public class NewsListPresenter extends BasePresenter<NewsListContract.Model, New
                     @Override
                     public void onNext(NewsListEntity newsListEntity) {
                         page++;
-                        if (isPullRefresh) mUsers.clear();//如果是上拉刷新则清空列表
-                        for (NewsListEntity.TngouBean bean : newsListEntity.getTngou()) {
-                            mUsers.add(bean);
-                        }
-                        mAdapter.notifyDataSetChanged();//通知更新数据
+                        mRootView.loadData(newsListEntity.getTngou());
                     }
                 });
     }

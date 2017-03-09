@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.jess.arms.utils.KnifeUtil;
-import com.zhy.autolayout.utils.AutoUtils;
 
 /**
  * Created by jess on 2015/11/24.

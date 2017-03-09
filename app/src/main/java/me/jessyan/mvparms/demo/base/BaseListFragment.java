@@ -3,21 +3,34 @@ package me.jessyan.mvparms.demo.base;
 import android.widget.AbsListView;
 import com.jess.arms.R;
 import com.jess.arms.base.BaseFragment;
+import com.jess.arms.mvp.BasePresenter;
 import java.util.List;
+import me.jessyan.mvparms.demo.app.WEApplication;
+import me.jessyan.mvparms.demo.di.component.AppComponent;
 import me.jessyan.mvparms.demo.widget.EmptyLayout;
 
-public abstract class BaseListFragment extends BaseFragment {
+public abstract class BaseListFragment<P extends BasePresenter> extends BaseFragment<P> {
 
     protected int mState = STATE_NONE;
     protected int pageSize = 10; //一页加载的条数
     protected int mCurrentPage = 1;
-    protected EmptyLayout emptyLayout;
+    protected EmptyLayout mEmptyLayout;
 
     protected BaseListAdapter mListAdapter;
     protected AbsListView mListView;
 
+    protected WEApplication mWeApplication;
+    @Override
+    protected void ComponentInject() {
+        mWeApplication = (WEApplication)mActivity.getApplication();
+        setupFragmentComponent(mWeApplication.getAppComponent());
+    }
+
+    //提供AppComponent(提供所有的单例对象)给子类，进行Component依赖
+    protected abstract void setupFragmentComponent(AppComponent appComponent);
+
     // 请求列表数据
-    protected abstract void requestList(int page);
+    protected abstract void requestList(boolean isCache);
 
     protected AbsListView.OnScrollListener mScrollListener = new AbsListView.OnScrollListener() {
 
@@ -51,8 +64,7 @@ public abstract class BaseListFragment extends BaseFragment {
             refreshFinish();
             if (isSuccess) {
                 if (list != null && list.size() > 0) {
-//                    showLoadSuccessLayout();
-                    emptyLayout.setErrorType(EmptyLayout.HIDE_LAYOUT);
+                    mEmptyLayout.setErrorType(EmptyLayout.HIDE_LAYOUT);
                     mCurrentPage = 2;// 刷新成功
                     mListAdapter.setData(list);
                     if (isCanLoadMore()) {
@@ -66,17 +78,10 @@ public abstract class BaseListFragment extends BaseFragment {
                         mListAdapter.setListState(BaseListAdapter.LIST_STATE_EMPTY);
                     }
                 } else {
-                    emptyLayout.setErrorType(EmptyLayout.NODATA);
-//                    showLoadingFailLayout(getNothingMsg(), null);
+                    mEmptyLayout.setErrorType(EmptyLayout.NODATA);
                 }
             } else {
-                emptyLayout.setErrorType(EmptyLayout.NETWORK_ERROR);
-                /*showLoadingFailLayout(getString(R.string.error_view_load_error), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        refreshData();
-                    }
-                });*/
+                mEmptyLayout.setErrorType(EmptyLayout.NETWORK_ERROR);
             }
         } else if (mState == STATE_LOAD_MORE) {
             if (isSuccess) {
@@ -114,7 +119,7 @@ public abstract class BaseListFragment extends BaseFragment {
     public void refreshData() {
         super.refreshData();
         mState = STATE_REFRESH;
-        requestList(1);
+        requestList(true);
     }
 
     /**
@@ -122,7 +127,7 @@ public abstract class BaseListFragment extends BaseFragment {
      */
     protected void loadMore() {
         mState = STATE_LOAD_MORE;
-        requestList(mCurrentPage);
+        requestList(false);
     }
 
     /**

@@ -1,24 +1,20 @@
 package me.jessyan.mvparms.demo.mvp.ui.fragment;
 
+import static com.jess.arms.utils.Preconditions.checkNotNull;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-
-import com.jess.arms.base.DefaultAdapter;
-import com.jess.arms.utils.UiUtils;
-import com.paginate.Paginate;
-
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
 import butterknife.BindView;
-import butterknife.ButterKnife;
+import in.srain.cube.views.ptr.PtrClassicFrameLayout;
+import java.util.List;
 import me.jessyan.mvparms.demo.R;
 import me.jessyan.mvparms.demo.app.WEApplication;
+import me.jessyan.mvparms.demo.base.BaseListFragment;
 import me.jessyan.mvparms.demo.di.component.AppComponent;
 import me.jessyan.mvparms.demo.di.component.DaggerImageListComponent;
 import me.jessyan.mvparms.demo.di.module.ImageListModule;
@@ -26,13 +22,9 @@ import me.jessyan.mvparms.demo.mvp.contract.ImageListContract;
 import me.jessyan.mvparms.demo.mvp.model.entity.ImageEntity;
 import me.jessyan.mvparms.demo.mvp.presenter.ImageListPresenter;
 import me.jessyan.mvparms.demo.mvp.ui.activity.ImageDetailActivity;
-import me.jessyan.mvparms.demo.mvp.ui.common.WEFragment;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
+import me.jessyan.mvparms.demo.mvp.ui.adapter.ImageListAdapter;
+import me.jessyan.mvparms.demo.widget.EmptyLayout;
 import timber.log.Timber;
-
-import static com.jess.arms.utils.Preconditions.checkNotNull;
 
 /**
  * 通过Template生成对应页面的MVP和Dagger代码,请注意输入框中输入的名字必须相同
@@ -42,20 +34,19 @@ import static com.jess.arms.utils.Preconditions.checkNotNull;
  * 继续将Module和Component生成完后,编译一下项目再回到Activity,按提示修改一个方法名即可
  * 如果想生成Fragment的相关文件,则将上面构建顺序中的Activity换为Fragment,并将Component中inject方法的参数改为此Fragment
  */
-
 /**
  * Created by xing on 2016/12/1.
  */
 
-public class ImageListFragment extends WEFragment<ImageListPresenter> implements
-        ImageListContract.View, SwipeRefreshLayout.OnRefreshListener {
+public class ImageListFragment extends BaseListFragment<ImageListPresenter> implements
+        ImageListContract.View{
 
-    @BindView(R.id.recyclerView)
-    RecyclerView recyclerView;
-    @BindView(R.id.SwipeRefreshLayout)
-    SwipeRefreshLayout mSwipeRefreshLayout;
-    private Paginate mPaginate;
-    private boolean isLoadingMore;
+    @BindView(R.id.ptr)
+    PtrClassicFrameLayout ptr;
+    @BindView(R.id.listView)
+    ListView listView;
+    @BindView(R.id.emptyLayout)
+    EmptyLayout emptyLayout;
     private int id = 1;
     private String cacheName = "";
 
@@ -78,24 +69,51 @@ public class ImageListFragment extends WEFragment<ImageListPresenter> implements
                 .inject(this);
     }
 
+    @Override
+    protected void requestList(boolean isCache) {
+       mPresenter.requestImageList(cacheName, id, isCache);
+    }
+
+
+    @Override
+    protected void loadData() {
+        super.loadData();
+        if(id == 1) {
+            mPresenter.requestImageList(cacheName, id, true);
+        }
+    }
+
     /**
      * 初始化RecycleView
      */
     private void initRecycleView() {
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        configRecycleView(recyclerView, new LinearLayoutManager(getActivity()));
-    }
-
-    @Override
-    protected void loadData() {
         Bundle bundle = getArguments();
         if(null != bundle) {
             id = bundle.getInt("id", 1);
             cacheName = bundle.getString("cacheName");
         }
-       if(id == 1) {
-        mPresenter.requestImageList(cacheName, id, true);
-      }
+        setPageSize(20);
+        mListView = listView;
+        mEmptyLayout = emptyLayout;
+        mEmptyLayout.setErrorType(EmptyLayout.NETWORK_LOADING);
+        ((ListView)mListView).setDividerHeight(10);
+        mListView.setOnScrollListener(mScrollListener);
+    }
+
+    @Override
+    protected void initView(View rootView) {
+        initRecycleView();
+        mListAdapter = new ImageListAdapter();
+        mListView.setAdapter(mListAdapter);
+        mListView.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                ImageEntity.TngouBean entity = (ImageEntity.TngouBean) mListAdapter.getItem(i);
+                Intent intent =  new Intent(getActivity(), ImageDetailActivity.class);
+                intent.putExtra("imageDetailId",entity.getId());
+                startActivity(intent);
+            }
+        });
     }
 
     private boolean hasLoadOnce = false;
@@ -110,43 +128,16 @@ public class ImageListFragment extends WEFragment<ImageListPresenter> implements
             hasLoadOnce = true;
         }
     }
-    @Override
-    public void onRefresh() {
-        mPresenter.requestImageList(cacheName, id, true);
-    }
 
-    /**
-     * 配置recycleview
-     *
-     * @param recyclerView
-     * @param layoutManager
-     */
-    private void configRecycleView(RecyclerView recyclerView
-            , RecyclerView.LayoutManager layoutManager
-    ) {
-        recyclerView.setLayoutManager(layoutManager);
-        //如果可以确定每个item的高度是固定的，设置这个选项可以提高性能
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-    }
 
     @Override
     public void showLoading() {
         Timber.tag(TAG).w("showLoading");
-        Observable.just(1)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Integer>() {
-                    @Override
-                    public void call(Integer integer) {
-                        mSwipeRefreshLayout.setRefreshing(true);
-                    }
-                });
     }
 
     @Override
     public void hideLoading() {
-        Timber.tag(TAG).w("hideLoading");
-        mSwipeRefreshLayout.setRefreshing(false);
+        refreshFinish();
     }
 
     @Override
@@ -156,70 +147,8 @@ public class ImageListFragment extends WEFragment<ImageListPresenter> implements
     }
 
     @Override
-    public void launchActivity(@NonNull Intent intent) {
-        checkNotNull(intent);
-//        UiUtils.startActivity(this, intent);
-    }
-
-    @Override
-    public void killMyself() {
-//        finish();
-    }
-
-
-    @Override
-    public void setAdapter(final DefaultAdapter adapter) {
-        recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(new DefaultAdapter.OnRecyclerViewItemClickListener() {
-            @Override
-            public void onItemClick(View view, Object data, int position) {
-                ImageEntity.TngouBean entity = (ImageEntity.TngouBean) adapter.getInfos().get(position);
-                Intent intent =  new Intent(getActivity(), ImageDetailActivity.class);
-                intent.putExtra("imageDetailId",entity.getId());
-                startActivity(intent);
-            }
-        });
-        initRecycleView();
-        initPaginate();
-    }
-
-    @Override
-    public void startLoadMore() {
-        isLoadingMore = true;
-    }
-
-    @Override
-    public void endLoadMore() {
-        isLoadingMore = false;
-    }
-
-    /**
-     * 初始化Paginate,用于加载更多
-     */
-    private void initPaginate() {
-        if (mPaginate == null) {
-            Paginate.Callbacks callbacks = new Paginate.Callbacks() {
-                @Override
-                public void onLoadMore() {
-                    mPresenter.requestImageList(cacheName,id, false);
-                }
-
-                @Override
-                public boolean isLoading() {
-                    return isLoadingMore;
-                }
-
-                @Override
-                public boolean hasLoadedAllItems() {
-                    return false;
-                }
-            };
-
-            mPaginate = Paginate.with(recyclerView, callbacks)
-                    .setLoadingTriggerThreshold(0)
-                    .build();
-            mPaginate.setHasMoreDataToLoad(false);
-        }
+    public void loadData(List list,boolean isSuccess) {
+        requestListFinish(isSuccess,list);
     }
 
     @Override

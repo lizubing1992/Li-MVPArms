@@ -1,40 +1,31 @@
 package me.jessyan.mvparms.demo.mvp.ui.fragment;
 
+import static com.jess.arms.utils.Preconditions.checkNotNull;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-
-import com.jess.arms.base.DefaultAdapter;
-import com.jess.arms.utils.UiUtils;
-import com.paginate.Paginate;
-
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
 import butterknife.BindView;
-import butterknife.ButterKnife;
+import com.jess.arms.utils.UiUtils;
+import in.srain.cube.views.ptr.PtrClassicFrameLayout;
+import java.util.List;
 import me.jessyan.mvparms.demo.R;
 import me.jessyan.mvparms.demo.app.WEApplication;
+import me.jessyan.mvparms.demo.base.BaseListFragment;
 import me.jessyan.mvparms.demo.di.component.AppComponent;
 import me.jessyan.mvparms.demo.di.component.DaggerNewsListComponent;
 import me.jessyan.mvparms.demo.di.module.NewsListModule;
 import me.jessyan.mvparms.demo.mvp.contract.NewsListContract;
-import me.jessyan.mvparms.demo.mvp.model.entity.ImageEntity;
 import me.jessyan.mvparms.demo.mvp.model.entity.NewsListEntity;
 import me.jessyan.mvparms.demo.mvp.presenter.NewsListPresenter;
-import me.jessyan.mvparms.demo.mvp.ui.activity.ImageDetailActivity;
 import me.jessyan.mvparms.demo.mvp.ui.activity.NewsDetailActivity;
-import me.jessyan.mvparms.demo.mvp.ui.common.WEFragment;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
+import me.jessyan.mvparms.demo.mvp.ui.adapter.NewsListAdapter;
+import me.jessyan.mvparms.demo.widget.EmptyLayout;
 import timber.log.Timber;
-
-import static com.jess.arms.utils.Preconditions.checkNotNull;
 
 /**
  * 通过Template生成对应页面的MVP和Dagger代码,请注意输入框中输入的名字必须相同
@@ -49,15 +40,15 @@ import static com.jess.arms.utils.Preconditions.checkNotNull;
  * Created by xing on 2016/12/7.
  */
 
-public class NewsListFragment extends WEFragment<NewsListPresenter> implements NewsListContract.View, SwipeRefreshLayout.OnRefreshListener {
+public class NewsListFragment extends BaseListFragment<NewsListPresenter> implements NewsListContract.View{
 
 
-    @BindView(R.id.recyclerView)
-    RecyclerView recyclerView;
-    @BindView(R.id.SwipeRefreshLayout)
-    SwipeRefreshLayout mSwipeRefreshLayout;
-    private Paginate mPaginate;
-    private boolean isLoadingMore;
+    @BindView(R.id.ptr)
+    PtrClassicFrameLayout ptr;
+    @BindView(R.id.listView)
+    ListView listView;
+    @BindView(R.id.emptyLayout)
+    EmptyLayout emptyLayout;
     private int id = 1;
     private String cacheName = "";
 
@@ -94,61 +85,29 @@ public class NewsListFragment extends WEFragment<NewsListPresenter> implements N
             hasLoadOnce = true;
         }
     }
+
     @Override
-    public void onRefresh() {
-        mPresenter.requestNewsList(cacheName, id, true);
-    }
-    /**
-     * 初始化RecycleView
-     */
-    private void initRecycleView() {
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        configRecycleView(recyclerView, new LinearLayoutManager(getActivity()));
+    protected void requestList(boolean isCache) {
+        mPresenter.requestNewsList(cacheName, id, isCache);
+
     }
     @Override
     protected void loadData() {
-        Bundle bundle = getArguments();
-        if(null != bundle) {
-            id = bundle.getInt("id", 1);
-            cacheName = bundle.getString("cacheName");
-        }
         if(id == 1) {
             mPresenter.requestNewsList(cacheName, id, true);
         }
     }
 
-    /**
-     * 配置recycleview
-     *
-     * @param recyclerView
-     * @param layoutManager
-     */
-    private void configRecycleView(RecyclerView recyclerView
-            , RecyclerView.LayoutManager layoutManager
-    ) {
-        recyclerView.setLayoutManager(layoutManager);
-        //如果可以确定每个item的高度是固定的，设置这个选项可以提高性能
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-    }
 
     @Override
     public void showLoading() {
         Timber.tag(TAG).w("showLoading");
-        Observable.just(1)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Integer>() {
-                    @Override
-                    public void call(Integer integer) {
-                        mSwipeRefreshLayout.setRefreshing(true);
-                    }
-                });
     }
 
     @Override
     public void hideLoading() {
+        refreshFinish();
         Timber.tag(TAG).w("hideLoading");
-        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -158,41 +117,32 @@ public class NewsListFragment extends WEFragment<NewsListPresenter> implements N
 //        UiUtils.SnackbarText(message);
     }
 
-    @Override
-    public void launchActivity(@NonNull Intent intent) {
-        checkNotNull(intent);
-        UiUtils.startActivity(getActivity(), intent);
-    }
 
     @Override
-    public void killMyself() {
-
-    }
-
-    @Override
-    public void setAdapter(final DefaultAdapter adapter) {
-        recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(new DefaultAdapter.OnRecyclerViewItemClickListener() {
+    protected void initView(View rootView) {
+        super.initView(rootView);
+        Bundle bundle = getArguments();
+        if(null != bundle) {
+            id = bundle.getInt("id", 1);
+            cacheName = bundle.getString("cacheName");
+        }
+        setPageSize(20);
+        mListView = listView;
+        mEmptyLayout = emptyLayout;
+        mEmptyLayout.setErrorType(EmptyLayout.NETWORK_LOADING);
+        ((ListView)mListView).setDividerHeight(10);
+        mListView.setOnScrollListener(mScrollListener);
+        mListAdapter = new NewsListAdapter();
+        mListView.setAdapter(mListAdapter);
+        mListView.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(View view, Object data, int position) {
-                NewsListEntity.TngouBean entity = (NewsListEntity.TngouBean) adapter.getInfos().get(position);
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                NewsListEntity.TngouBean entity = (NewsListEntity.TngouBean) mListAdapter.getItem(position);
                 Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
                 intent.putExtra("newsId", entity.getId());
                 startActivity(intent);
             }
         });
-        initRecycleView();
-        initPaginate();
-    }
-
-    @Override
-    public void startLoadMore() {
-        isLoadingMore = true;
-    }
-
-    @Override
-    public void endLoadMore() {
-        isLoadingMore = false;
     }
 
     @Override
@@ -200,33 +150,8 @@ public class NewsListFragment extends WEFragment<NewsListPresenter> implements N
         return R.layout.activity_user;
     }
 
-
-    /**
-     * 初始化Paginate,用于加载更多
-     */
-    private void initPaginate() {
-        if (mPaginate == null) {
-            Paginate.Callbacks callbacks = new Paginate.Callbacks() {
-                @Override
-                public void onLoadMore() {
-                    mPresenter.requestNewsList(cacheName, id, false);
-                }
-
-                @Override
-                public boolean isLoading() {
-                    return isLoadingMore;
-                }
-
-                @Override
-                public boolean hasLoadedAllItems() {
-                    return false;
-                }
-            };
-
-            mPaginate = Paginate.with(recyclerView, callbacks)
-                    .setLoadingTriggerThreshold(0)
-                    .build();
-            mPaginate.setHasMoreDataToLoad(false);
-        }
+    @Override
+    public void loadData(List list) {
+        requestListFinish(true,list);
     }
 }

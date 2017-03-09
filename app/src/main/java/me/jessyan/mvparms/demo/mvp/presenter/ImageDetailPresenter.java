@@ -79,11 +79,6 @@ public class ImageDetailPresenter extends BasePresenter<ImageDetailContract.Mode
                     @Override
                     public void onNext(ImageDetailEntity entity) {
                        mRootView.setImageDetail(entity);
-                       /* if (pullToRefresh) mUsers.clear();//如果是上拉刷新则清空列表
-                        for (ImageEntity.TngouBean bean : entity.getTngou()) {
-                            mUsers.add(bean);
-                        }
-                        mAdapter.notifyDataSetChanged();//通知更新数据*/
                     }
                 });
     }

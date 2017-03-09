@@ -112,17 +112,6 @@ public class NewsDetailActivity extends WEActivity<NewsDetailPresenter> implemen
         WEApplication.showToast(message);
     }
 
-    @Override
-    public void launchActivity(@NonNull Intent intent) {
-        checkNotNull(intent);
-        UiUtils.startActivity(this, intent);
-    }
-
-    @Override
-    public void killMyself() {
-        finish();
-    }
-
 
     @Override
     public void loadData(NewsDetailEntity newsDetail) {

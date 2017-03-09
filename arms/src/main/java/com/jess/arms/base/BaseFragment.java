@@ -1,32 +1,22 @@
 package com.jess.arms.base;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import com.jess.arms.R;
 import com.jess.arms.mvp.BasePresenter;
 import com.jess.arms.widget.DefaultAlertDialog;
 import com.jess.arms.widget.customhead.CustomPtrHeader;
 import com.trello.rxlifecycle.components.support.RxFragment;
-
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
-import org.simple.eventbus.EventBus;
-
-import java.lang.reflect.Field;
-
 import javax.inject.Inject;
-
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
  * Created by jess on 2015/12/8.

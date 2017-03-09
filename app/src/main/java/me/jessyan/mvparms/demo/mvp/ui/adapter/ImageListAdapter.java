@@ -1,36 +1,64 @@
 package me.jessyan.mvparms.demo.mvp.ui.adapter;
 
+import android.content.Context;
+import android.support.annotation.Nullable;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.jess.arms.base.BaseHolder;
-import com.jess.arms.base.DefaultAdapter;
-
-import java.util.List;
-
 import butterknife.BindView;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.jakewharton.rxbinding.widget.RxTextView;
+import com.jess.arms.utils.KnifeUtil;
 import me.jessyan.mvparms.demo.R;
+import me.jessyan.mvparms.demo.app.FrescoHelper;
+import me.jessyan.mvparms.demo.base.BaseListAdapter;
 import me.jessyan.mvparms.demo.mvp.model.entity.ImageEntity;
-import me.jessyan.mvparms.demo.mvp.ui.holder.ImageListItemHolder;
+import rx.Observable;
 
 /**
  * Created by xing on 2016/12/1.
  */
-public class ImageListAdapter extends DefaultAdapter<ImageEntity.TngouBean> {
+public class ImageListAdapter extends BaseListAdapter {
 
-    public ImageListAdapter(List<ImageEntity.TngouBean> mUsers) {
-        super(mUsers);
-    }
+    private Context context;
 
     @Override
-    public BaseHolder getHolder(View v) {
-        return new ImageListItemHolder(v);
+    protected View getRealView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder;
+        if (convertView == null || convertView.getTag() == null) {
+            context = parent.getContext();
+            convertView = getLayoutInflater(context).inflate(R.layout.recycle_list, null);
+            holder = new ViewHolder(convertView);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
+        }
+
+        if (dataList != null && dataList.size() > 0) {
+
+            if (dataList.get(position) instanceof ImageEntity.TngouBean) {
+                ImageEntity.TngouBean entity = (ImageEntity.TngouBean) dataList.get(position);
+                Observable.just(entity.getTitle())
+                    .subscribe(RxTextView.text(holder.mName));
+                FrescoHelper.displayImageResize(holder.ivAvatar,"http://tnfs.tngou.net/img"+entity.getImg(),300,150,2);
+
+            }
+        }
+            return convertView;
+
     }
 
-    @Override
-    public int getLayoutId() {
-        return R.layout.recycle_list;
+    class ViewHolder {
+        @Nullable
+        @BindView(R.id.iv_avatar)
+        SimpleDraweeView ivAvatar;
+
+        @Nullable
+        @BindView(R.id.tv_name)
+        TextView mName;
+        public ViewHolder(View view) {
+            KnifeUtil.bindTarget(this, view);//绑定
+        }
     }
 
 

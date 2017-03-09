@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import org.simple.eventbus.EventBus;
 
 import rx.Subscription;
 
@@ -24,14 +23,12 @@ public abstract class BaseService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        EventBus.getDefault().register(this);
         init();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
     }
 
     public void unSubscribe(Subscription subscription) {

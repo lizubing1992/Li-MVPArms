@@ -1,21 +1,16 @@
 package me.jessyan.mvparms.demo.mvp.ui.activity;
 
+import static com.jess.arms.utils.Preconditions.checkNotNull;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.TextView;
-
-import com.jess.arms.utils.UiUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.jess.arms.utils.UiUtils;
 import me.jessyan.mvparms.demo.R;
 import me.jessyan.mvparms.demo.app.WEApplication;
 import me.jessyan.mvparms.demo.di.component.AppComponent;
@@ -25,14 +20,10 @@ import me.jessyan.mvparms.demo.mvp.contract.ImageDetailContract;
 import me.jessyan.mvparms.demo.mvp.model.entity.ImageDetailEntity;
 import me.jessyan.mvparms.demo.mvp.presenter.ImageDetailPresenter;
 import me.jessyan.mvparms.demo.mvp.ui.adapter.ImageDetailAdapter;
-import me.jessyan.mvparms.demo.mvp.ui.adapter.PhotoPagerAdapter;
 import me.jessyan.mvparms.demo.mvp.ui.common.WEActivity;
-import me.jessyan.mvparms.demo.mvp.ui.fragment.PhotoDetailFragment;
 import me.jessyan.mvparms.demo.widget.EmptyLayout;
 import me.jessyan.mvparms.demo.widget.PhotoViewPager;
 import timber.log.Timber;
-
-import static com.jess.arms.utils.Preconditions.checkNotNull;
 
 /**
  * 通过Template生成对应页面的MVP和Dagger代码,请注意输入框中输入的名字必须相同
@@ -95,18 +86,6 @@ public class ImageDetailActivity extends WEActivity<ImageDetailPresenter> implem
         checkNotNull(message);
         WEApplication.showToast(message);
     }
-
-    @Override
-    public void launchActivity(@NonNull Intent intent) {
-        checkNotNull(intent);
-        UiUtils.startActivity(this, intent);
-    }
-
-    @Override
-    public void killMyself() {
-        finish();
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -62,10 +62,6 @@ dependencies {
     provided rootProject.ext.dependencies["javax.annotation"]
     apt rootProject.ext.dependencies["butterknife-apt"]
     compile project(':arms')
-    compile rootProject.ext.dependencies["paginate"]
-    debugCompile rootProject.ext.dependencies["canary-debug"]
-    releaseCompile rootProject.ext.dependencies["canary-release"]
-    testCompile rootProject.ext.dependencies["canary-release"]
     //主要是为了让Fresco用上Okhttp
     compile 'com.facebook.fresco:fresco:0.8.1'
     compile 'com.facebook.fresco:imagepipeline-okhttp:0.8.1'

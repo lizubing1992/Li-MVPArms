@@ -1,18 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/SwipeRefreshLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="15px"
-    >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        tools:listitem="@layout/recycle_list"
-        />
+    <me.jessyan.mvparms.demo.widget.EmptyLayout
+      android:layout_width="match_parent"
+      android:id="@id/emptyLayout"
+      android:layout_height="match_parent"/>
 
-</android.support.v4.widget.SwipeRefreshLayout>
+
+    <in.srain.cube.views.ptr.PtrClassicFrameLayout
+      xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
+      android:id="@+id/ptr"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      cube_ptr:ptr_duration_to_close="@integer/ptr_duration_to_close"
+      cube_ptr:ptr_duration_to_close_header="@integer/ptr_duration_to_close_header"
+      cube_ptr:ptr_keep_header_when_refresh="@bool/ptr_keep_header_when_refresh"
+      cube_ptr:ptr_pull_to_fresh="@bool/ptr_pull_to_fresh"
+      cube_ptr:ptr_ratio_of_header_height_to_refresh="@dimen/ptr_ratio_of_header_height_to_refresh"
+      cube_ptr:ptr_resistance="@dimen/ptr_resistance">
+
+        <ListView
+          android:id="@+id/listView"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:divider="@color/colorPrimaryWindowBg"
+          android:dividerHeight="0dp"
+          android:listSelector="@color/transparent"
+          android:overScrollMode="never"
+          android:scrollbars="none" />
+
+    </in.srain.cube.views.ptr.PtrClassicFrameLayout>
+
+</LinearLayout>
