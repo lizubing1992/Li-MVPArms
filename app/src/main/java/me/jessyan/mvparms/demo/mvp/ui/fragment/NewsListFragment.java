@@ -8,23 +8,13 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
-import butterknife.BindView;
-import com.jess.arms.utils.UiUtils;
-import in.srain.cube.views.ptr.PtrClassicFrameLayout;
-import java.util.List;
-import me.jessyan.mvparms.demo.R;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.util.ArrayList;
 import me.jessyan.mvparms.demo.app.WEApplication;
-import me.jessyan.mvparms.demo.base.BaseListFragment;
-import me.jessyan.mvparms.demo.di.component.AppComponent;
-import me.jessyan.mvparms.demo.di.component.DaggerNewsListComponent;
-import me.jessyan.mvparms.demo.di.module.NewsListModule;
-import me.jessyan.mvparms.demo.mvp.contract.NewsListContract;
 import me.jessyan.mvparms.demo.mvp.model.entity.NewsListEntity;
-import me.jessyan.mvparms.demo.mvp.presenter.NewsListPresenter;
 import me.jessyan.mvparms.demo.mvp.ui.activity.NewsDetailActivity;
 import me.jessyan.mvparms.demo.mvp.ui.adapter.NewsListAdapter;
-import me.jessyan.mvparms.demo.widget.EmptyLayout;
 import timber.log.Timber;
 
 /**
@@ -40,18 +30,7 @@ import timber.log.Timber;
  * Created by xing on 2016/12/7.
  */
 
-public class NewsListFragment extends BaseListFragment<NewsListPresenter> implements NewsListContract.View{
-
-
-    @BindView(R.id.ptr)
-    PtrClassicFrameLayout ptr;
-    @BindView(R.id.listView)
-    ListView listView;
-    @BindView(R.id.emptyLayout)
-    EmptyLayout emptyLayout;
-    private int id = 1;
-    private String cacheName = "";
-
+public class NewsListFragment extends DaggerBaseListFragment{
 
     public static NewsListFragment newInstance(int id,String cacheName) {
         NewsListFragment fragment = new NewsListFragment();
@@ -62,39 +41,22 @@ public class NewsListFragment extends BaseListFragment<NewsListPresenter> implem
         return fragment;
     }
 
-    @Override
-    protected void setupFragmentComponent(AppComponent appComponent) {
-        DaggerNewsListComponent
-                .builder()
-                .appComponent(appComponent)
-                .newsListModule(new NewsListModule(this))//请将NewsListModule()第一个首字母改为小写
-                .build()
-                .inject(this);
-    }
-
-
     private boolean hasLoadOnce = false;
-
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && !hasLoadOnce) {
             if(id != 1) {
-                mPresenter.requestNewsList(cacheName, id, true);
+                requestList(true);
             }
             hasLoadOnce = true;
         }
     }
 
     @Override
-    protected void requestList(boolean isCache) {
-        mPresenter.requestNewsList(cacheName, id, isCache);
-
-    }
-    @Override
     protected void loadData() {
         if(id == 1) {
-            mPresenter.requestNewsList(cacheName, id, true);
+            requestList(true);
         }
     }
 
@@ -125,13 +87,8 @@ public class NewsListFragment extends BaseListFragment<NewsListPresenter> implem
         if(null != bundle) {
             id = bundle.getInt("id", 1);
             cacheName = bundle.getString("cacheName");
+            url = "/api/top/list";
         }
-        setPageSize(20);
-        mListView = listView;
-        mEmptyLayout = emptyLayout;
-        mEmptyLayout.setErrorType(EmptyLayout.NETWORK_LOADING);
-        ((ListView)mListView).setDividerHeight(10);
-        mListView.setOnScrollListener(mScrollListener);
         mListAdapter = new NewsListAdapter();
         mListView.setAdapter(mListAdapter);
         mListView.setOnItemClickListener(new OnItemClickListener() {
@@ -146,12 +103,10 @@ public class NewsListFragment extends BaseListFragment<NewsListPresenter> implem
     }
 
     @Override
-    protected int getLayoutId() {
-        return R.layout.activity_user;
-    }
-
-    @Override
-    public void loadData(List list) {
-        requestListFinish(true,list);
+    public void loadListData(String  list,boolean isSuccess) {
+        ArrayList<NewsListEntity.TngouBean> mList = new Gson().fromJson(list,
+            new TypeToken<ArrayList<NewsListEntity.TngouBean>>() {
+            }.getType());
+        requestListFinish(true,mList);
     }
 }

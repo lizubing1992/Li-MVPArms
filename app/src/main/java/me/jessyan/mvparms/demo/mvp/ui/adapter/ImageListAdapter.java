@@ -13,6 +13,7 @@ import me.jessyan.mvparms.demo.R;
 import me.jessyan.mvparms.demo.app.FrescoHelper;
 import me.jessyan.mvparms.demo.base.BaseListAdapter;
 import me.jessyan.mvparms.demo.mvp.model.entity.ImageEntity;
+import me.jessyan.mvparms.demo.mvp.model.entity.TngouBean;
 import rx.Observable;
 
 /**
@@ -36,8 +37,8 @@ public class ImageListAdapter extends BaseListAdapter {
 
         if (dataList != null && dataList.size() > 0) {
 
-            if (dataList.get(position) instanceof ImageEntity.TngouBean) {
-                ImageEntity.TngouBean entity = (ImageEntity.TngouBean) dataList.get(position);
+            if (dataList.get(position) instanceof TngouBean) {
+               TngouBean entity = (TngouBean) dataList.get(position);
                 Observable.just(entity.getTitle())
                     .subscribe(RxTextView.text(holder.mName));
                 FrescoHelper.displayImageResize(holder.ivAvatar,"http://tnfs.tngou.net/img"+entity.getImg(),300,150,2);

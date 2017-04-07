@@ -5,6 +5,7 @@ import android.text.TextUtils;
 
 import com.jess.arms.http.GlobeHttpHandler;
 import com.jess.arms.http.RequestIntercept;
+import com.jess.arms.http.ScalarsConverterFactory;
 import com.jess.arms.utils.DataHelper;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
@@ -169,8 +170,9 @@ public class ClientModule {
         return builder
                 .baseUrl(httpUrl)//域名
                 .client(client)//设置okhttp
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())//使用rxjava
+                .addConverterFactory(new ScalarsConverterFactory())//主要是为了能解析得到加密的String数据
                 .addConverterFactory(GsonConverterFactory.create())//使用Gson
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())//使用rxjava
                 .build();
     }
 

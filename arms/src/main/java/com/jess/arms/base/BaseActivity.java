@@ -52,6 +52,7 @@ public abstract class BaseActivity<P extends BasePresenter> extends RxAppCompatA
         setOnItemClickListener();
         loadData();//加载数据
         initRxBus();
+        AppManager.getAppManager().addActivity(this);
     }
 
     protected void initViews(Bundle savedInstanceState) {
@@ -180,6 +181,7 @@ public abstract class BaseActivity<P extends BasePresenter> extends RxAppCompatA
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        AppManager.getAppManager().finishActivity(this);
         if (mPresenter != null) {
             mPresenter.onDestroy();//释放资源
             mPresenter = null;

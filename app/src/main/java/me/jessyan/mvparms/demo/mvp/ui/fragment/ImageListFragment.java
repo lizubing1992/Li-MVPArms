@@ -8,22 +8,13 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
-import butterknife.BindView;
-import in.srain.cube.views.ptr.PtrClassicFrameLayout;
-import java.util.List;
-import me.jessyan.mvparms.demo.R;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.util.ArrayList;
 import me.jessyan.mvparms.demo.app.WEApplication;
-import me.jessyan.mvparms.demo.base.BaseListFragment;
-import me.jessyan.mvparms.demo.di.component.AppComponent;
-import me.jessyan.mvparms.demo.di.component.DaggerImageListComponent;
-import me.jessyan.mvparms.demo.di.module.ImageListModule;
-import me.jessyan.mvparms.demo.mvp.contract.ImageListContract;
-import me.jessyan.mvparms.demo.mvp.model.entity.ImageEntity;
-import me.jessyan.mvparms.demo.mvp.presenter.ImageListPresenter;
+import me.jessyan.mvparms.demo.mvp.model.entity.TngouBean;
 import me.jessyan.mvparms.demo.mvp.ui.activity.ImageDetailActivity;
 import me.jessyan.mvparms.demo.mvp.ui.adapter.ImageListAdapter;
-import me.jessyan.mvparms.demo.widget.EmptyLayout;
 import timber.log.Timber;
 
 /**
@@ -38,18 +29,7 @@ import timber.log.Timber;
  * Created by xing on 2016/12/1.
  */
 
-public class ImageListFragment extends BaseListFragment<ImageListPresenter> implements
-        ImageListContract.View{
-
-    @BindView(R.id.ptr)
-    PtrClassicFrameLayout ptr;
-    @BindView(R.id.listView)
-    ListView listView;
-    @BindView(R.id.emptyLayout)
-    EmptyLayout emptyLayout;
-    private int id = 1;
-    private String cacheName = "";
-
+public class ImageListFragment extends DaggerBaseListFragment{
     public static ImageListFragment newInstance(int id,String cacheName) {
         Bundle bundle = new Bundle();
         bundle.putInt("id", id);
@@ -58,57 +38,29 @@ public class ImageListFragment extends BaseListFragment<ImageListPresenter> impl
         fragment.setArguments(bundle);
         return fragment;
     }
-
     @Override
-    protected void setupFragmentComponent(AppComponent appComponent) {
-        DaggerImageListComponent
-                .builder()
-                .appComponent(appComponent)
-                .imageListModule(new ImageListModule(this))//请将ImageListModule()第一个首字母改为小写
-                .build()
-                .inject(this);
-    }
-
-    @Override
-    protected void requestList(boolean isCache) {
-       mPresenter.requestImageList(cacheName, id, isCache);
-    }
-
-
-    @Override
-    protected void loadData() {
-        super.loadData();
-        if(id == 1) {
-            mPresenter.requestImageList(cacheName, id, true);
-        }
-    }
-
-    /**
-     * 初始化RecycleView
-     */
-    private void initRecycleView() {
-        Bundle bundle = getArguments();
-        if(null != bundle) {
-            id = bundle.getInt("id", 1);
-            cacheName = bundle.getString("cacheName");
-        }
-        setPageSize(20);
-        mListView = listView;
-        mEmptyLayout = emptyLayout;
-        mEmptyLayout.setErrorType(EmptyLayout.NETWORK_LOADING);
-        ((ListView)mListView).setDividerHeight(10);
-        mListView.setOnScrollListener(mScrollListener);
+    public void loadListData(String  list,boolean isSuccess) {
+        ArrayList<TngouBean> mList = new Gson().fromJson(list,
+            new TypeToken<ArrayList<TngouBean>>() {
+            }.getType());
+        requestListFinish(isSuccess,mList);
     }
 
     @Override
     protected void initView(View rootView) {
-        initRecycleView();
+        super.initView(rootView);
+        Bundle bundle = getArguments();
+        if(null != bundle) {
+            id = bundle.getInt("id", 1);
+            cacheName = bundle.getString("cacheName");
+            url = "/tnfs/api/list";
+        }
         mListAdapter = new ImageListAdapter();
         mListView.setAdapter(mListAdapter);
         mListView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                ImageEntity.TngouBean entity = (ImageEntity.TngouBean) mListAdapter.getItem(i);
+                TngouBean entity = (TngouBean) mListAdapter.getItem(i);
                 Intent intent =  new Intent(getActivity(), ImageDetailActivity.class);
                 intent.putExtra("imageDetailId",entity.getId());
                 startActivity(intent);
@@ -123,9 +75,16 @@ public class ImageListFragment extends BaseListFragment<ImageListPresenter> impl
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && !hasLoadOnce) {
             if(id != 1) {
-                mPresenter.requestImageList(cacheName, id, true);
+                requestList(true);
             }
             hasLoadOnce = true;
+        }
+    }
+
+    @Override
+    protected void loadData() {
+        if(id == 1) {
+            requestList(true);
         }
     }
 
@@ -146,13 +105,4 @@ public class ImageListFragment extends BaseListFragment<ImageListPresenter> impl
         WEApplication.showToast(message);
     }
 
-    @Override
-    public void loadData(List list,boolean isSuccess) {
-        requestListFinish(isSuccess,list);
-    }
-
-    @Override
-    protected int getLayoutId() {
-        return R.layout.activity_user;
-    }
 }

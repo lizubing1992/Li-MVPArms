@@ -14,12 +14,13 @@ import me.jessyan.mvparms.demo.R;
 import me.jessyan.mvparms.demo.app.FrescoHelper;
 import me.jessyan.mvparms.demo.app.WEApplication;
 import me.jessyan.mvparms.demo.mvp.model.entity.ImageEntity;
+import me.jessyan.mvparms.demo.mvp.model.entity.TngouBean;
 import rx.Observable;
 
 /**
  * Created by xing on 2016/12/1.
  */
-public class ImageListItemHolder extends BaseHolder<ImageEntity.TngouBean> {
+public class ImageListItemHolder extends BaseHolder<TngouBean> {
     @Nullable
     @BindView(R.id.iv_avatar)
     SimpleDraweeView ivAvatar;
@@ -35,7 +36,7 @@ public class ImageListItemHolder extends BaseHolder<ImageEntity.TngouBean> {
         mApplication = (WEApplication) itemView.getContext().getApplicationContext();
     }
     @Override
-    public void setData(ImageEntity.TngouBean data) {
+    public void setData(TngouBean data) {
         Observable.just(data.getTitle())
                 .subscribe(RxTextView.text(mName));
         FrescoHelper.displayImageResize(ivAvatar,"http://tnfs.tngou.net/img"+data.getImg(),300,150,2);
