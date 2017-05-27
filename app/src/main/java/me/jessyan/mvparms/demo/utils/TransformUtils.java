@@ -16,25 +16,22 @@
  */
 package me.jessyan.mvparms.demo.utils;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+
+import io.reactivex.ObservableTransformer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author 咖枯
  * @version 1.0 2016/8/20
  */
 public class TransformUtils {
-    public static <T> Observable.Transformer<T, T> defaultSchedulers() {
-        return new Observable.Transformer<T, T>() {
+    public static <T> ObservableTransformer<T, T> defaultSchedulers() {
+        return (upstream)->
+            upstream
+                .unsubscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
 
-            @Override
-            public Observable<T> call(Observable<T> tObservable) {
-                return tObservable
-                        .unsubscribeOn(Schedulers.io())
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread());
-            }
-        };
     }
 }

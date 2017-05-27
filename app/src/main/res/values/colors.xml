@@ -131,7 +131,16 @@
     <color name="daily_top_month">#FF4C46</color>
 
 
+    <color name="colorPrimaryWindowBg">#F5F4F9</color>
+    <!-- divider line color-->
+    <color name="ptr_color1">#1C74D0</color>
 
+    <!-- loading text color-->
+    <color name="loading_text_color">#ff7575</color>
+    <color name="loading_complete_text_color">#bbbbbb</color>
+    <color name="loading_shimmer_color">#fffafa</color>
+    <color name="red_package_orange">#ff7e00</color>
+    <color name="toast_bg_color">#d0576B95</color>
     <color name="blue">#0596EB</color>
     <color name="blue_spash">#600596EB</color>
     <color name="blue_alph">#9CC8E6</color>

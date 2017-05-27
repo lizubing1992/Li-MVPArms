@@ -1,33 +1,19 @@
 package me.jessyan.mvparms.demo.mvp.ui.adapter;
 
-import static android.R.attr.data;
-
 import android.content.Context;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.jakewharton.rxbinding.widget.RxTextView;
-import com.jess.arms.base.BaseHolder;
-import com.jess.arms.base.DefaultAdapter;
-
-import com.jess.arms.utils.KnifeUtil;
-import java.util.List;
-
 import butterknife.BindView;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.jakewharton.rxbinding2.widget.RxTextView;
+import com.jess.arms.utils.KnifeUtil;
+import io.reactivex.Observable;
 import me.jessyan.mvparms.demo.R;
 import me.jessyan.mvparms.demo.app.FrescoHelper;
 import me.jessyan.mvparms.demo.base.BaseListAdapter;
-import me.jessyan.mvparms.demo.mvp.model.entity.ImageEntity;
 import me.jessyan.mvparms.demo.mvp.model.entity.NewsListEntity;
-import me.jessyan.mvparms.demo.mvp.model.entity.NewsListEntity.TngouBean;
-import me.jessyan.mvparms.demo.mvp.ui.adapter.ImageListAdapter.ViewHolder;
-import me.jessyan.mvparms.demo.mvp.ui.holder.NewsListItemHolder;
 import me.jessyan.mvparms.demo.utils.MyUtils;
-import rx.Observable;
 
 /**
  * Created by xing on 2016/12/7.

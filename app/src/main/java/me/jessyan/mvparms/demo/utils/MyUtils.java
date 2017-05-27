@@ -23,19 +23,16 @@ import android.support.design.widget.TabLayout;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-
-
 import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
 import me.jessyan.mvparms.demo.R;
 import me.jessyan.mvparms.demo.app.Constants;
 import me.jessyan.mvparms.demo.app.WEApplication;
-import retrofit2.adapter.rxjava.HttpException;
-import rx.Subscription;
+import org.reactivestreams.Subscription;
+import retrofit2.HttpException;
 
 /**
  * @author 咖枯
@@ -145,8 +142,8 @@ public class MyUtils {
     }
 
     public static void cancelSubscription(Subscription subscription) {
-        if (subscription != null && !subscription.isUnsubscribed()) {
-            subscription.unsubscribe();
+        if (subscription != null) {
+            subscription.cancel();
         }
     }
 

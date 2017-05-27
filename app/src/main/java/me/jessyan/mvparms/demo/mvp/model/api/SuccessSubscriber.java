@@ -3,8 +3,6 @@
  */
 package me.jessyan.mvparms.demo.mvp.model.api;
 
-import com.google.gson.Gson;
-import me.jessyan.mvparms.demo.mvp.model.entity.BaseEntity;
 import me.jessyan.rxerrorhandler.core.RxErrorHandler;
 import me.jessyan.rxerrorhandler.handler.ErrorHandleSubscriber;
 import org.json.JSONArray;
@@ -25,9 +23,6 @@ public abstract class SuccessSubscriber<T> extends ErrorHandleSubscriber<T>{
 
   @Override
   public void onNext(T t) {
-//    BaseEntity baseEntity = new Gson().fromJson(t.toString(), BaseEntity.class);
-//    Timber.e("baseEntity.getTngou().toString()---"+baseEntity.getTngou().toString());
-//    onSuccess();
     try {
       JSONObject json = new JSONObject(t.toString());
       JSONArray array = json.getJSONArray("tngou");

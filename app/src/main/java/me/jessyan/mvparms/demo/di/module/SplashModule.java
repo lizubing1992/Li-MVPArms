@@ -1,17 +1,10 @@
 package me.jessyan.mvparms.demo.di.module;
 
-import com.google.gson.Gson;
-
-import android.app.Application;
-
 import com.jess.arms.di.scope.ActivityScope;
-
 import dagger.Module;
 import dagger.Provides;
 import me.jessyan.mvparms.demo.mvp.contract.SplashContract;
 import me.jessyan.mvparms.demo.mvp.model.SplashModel;
-import me.jessyan.mvparms.demo.mvp.model.api.cache.CacheManager;
-import me.jessyan.mvparms.demo.mvp.model.api.service.ServiceManager;
 
 /**
  * 通过Template生成对应页面的MVP和Dagger代码,请注意输入框中输入的名字必须相同
@@ -46,8 +39,7 @@ public class SplashModule {
 
     @ActivityScope
     @Provides
-    SplashContract.Model provideSplashModel(ServiceManager serviceManager, CacheManager cacheManager
-            , Gson gson, Application application) {
-        return new SplashModel(serviceManager, cacheManager, gson, application);
+    SplashContract.Model provideSplashModel(SplashModel model) {
+        return model;
     }
 }

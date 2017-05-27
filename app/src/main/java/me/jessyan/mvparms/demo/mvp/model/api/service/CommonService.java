@@ -1,6 +1,6 @@
 package me.jessyan.mvparms.demo.mvp.model.api.service;
 
-import me.jessyan.mvparms.demo.mvp.model.entity.BaseEntity;
+import io.reactivex.Observable;
 import me.jessyan.mvparms.demo.mvp.model.entity.ImageDetailEntity;
 import me.jessyan.mvparms.demo.mvp.model.entity.ImageEntity;
 import me.jessyan.mvparms.demo.mvp.model.entity.NewsDetailEntity;
@@ -8,7 +8,6 @@ import me.jessyan.mvparms.demo.mvp.model.entity.NewsListEntity;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 import retrofit2.http.Url;
-import rx.Observable;
 
 /**
  * Created by jess on 8/5/16 12:05

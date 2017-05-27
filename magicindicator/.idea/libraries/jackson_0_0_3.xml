@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="jackson-0.0.3">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.VictorAlbertos.Jolyglot/jackson/0.0.3/e48e38d43ff574b1aea5b55bbb5672bbb6065fc4/jackson-0.0.3.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.VictorAlbertos.Jolyglot/jackson/0.0.3/af354312bc88ace948794f797ef7e8a74f1b17ed/jackson-0.0.3-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.VictorAlbertos.Jolyglot/jackson/0.0.3/af354312bc88ace948794f797ef7e8a74f1b17ed/jackson-0.0.3-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -3,30 +3,21 @@ package me.jessyan.mvparms.demo.mvp.ui.activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.FrameLayout;
-
-import com.ashokvarma.bottomnavigation.BottomNavigationBar;
-import com.ashokvarma.bottomnavigation.BottomNavigationItem;
-import com.jess.arms.base.BaseActivity;
-import com.jess.arms.base.BaseFragment;
-import com.jess.arms.utils.UiUtils;
-
-import java.util.ArrayList;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.ashokvarma.bottomnavigation.BottomNavigationBar;
+import com.ashokvarma.bottomnavigation.BottomNavigationItem;
+import com.jess.arms.base.BaseFragment;
+import java.util.ArrayList;
 import me.jessyan.mvparms.demo.R;
 import me.jessyan.mvparms.demo.app.WEApplication;
+import me.jessyan.mvparms.demo.base.BaseRefreshActivity;
 import me.jessyan.mvparms.demo.mvp.ui.fragment.ImageFragment;
-import me.jessyan.mvparms.demo.mvp.ui.fragment.ImageListFragment;
 import me.jessyan.mvparms.demo.mvp.ui.fragment.NewsFragment;
 import me.jessyan.mvparms.demo.mvp.ui.fragment.UserFragment;
 
-public class MainActivity extends BaseActivity implements BottomNavigationBar.OnTabSelectedListener {
+public class MainActivity extends BaseRefreshActivity implements BottomNavigationBar.OnTabSelectedListener {
     @BindView(R.id.bottom_navigation_bar)
     BottomNavigationBar bottomNavigationBar;
     private ArrayList<BaseFragment> fragments;
@@ -54,15 +45,10 @@ public class MainActivity extends BaseActivity implements BottomNavigationBar.On
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ButterKnife.bind(this);
-    }
-
-    @Override
-    protected int getLayoutId() {
+    public int initView(Bundle savedInstanceState) {
         return R.layout.activity_main;
     }
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

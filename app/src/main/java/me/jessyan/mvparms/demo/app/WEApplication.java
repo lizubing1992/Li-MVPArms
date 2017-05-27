@@ -1,126 +1,132 @@
+/*
+ * All rights Reserved, Designed By 农金圈  2017年05月27日11:16
+ */
 package me.jessyan.mvparms.demo.app;
 
 import android.content.Context;
-import com.facebook.drawee.backends.pipeline.Fresco;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 import com.jess.arms.base.BaseApplication;
-import com.jess.arms.http.GlobeHttpHandler;
-import me.jessyan.mvparms.demo.BuildConfig;
-import me.jessyan.mvparms.demo.di.component.AppComponent;
-import me.jessyan.mvparms.demo.di.component.DaggerAppComponent;
-import me.jessyan.mvparms.demo.di.module.CacheModule;
-import me.jessyan.mvparms.demo.di.module.ServiceModule;
-import me.jessyan.mvparms.demo.mvp.model.api.Api;
-import me.jessyan.mvparms.demo.utils.MyUtils;
-import me.jessyan.rxerrorhandler.handler.listener.ResponseErroListener;
-import okhttp3.Interceptor;
-import okhttp3.Request;
-import okhttp3.Response;
-import timber.log.Timber;
+import me.jessyan.mvparms.demo.R;
 
 /**
- * Created by jess on 8/5/16 11:07
- * contact with jess.yan.effort@gmail.com
+ * 类的作用
+ *
+ * @author: lizubing
  */
-public class WEApplication extends BaseApplication {
-    private AppComponent mAppComponent;
+public class WEApplication extends BaseApplication{
+  private static WEApplication mApplication;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        mAppComponent = DaggerAppComponent
-                .builder()
-                .appModule(getAppModule())//baseApplication提供
-                .clientModule(getClientModule())//baseApplication提供
-                .serviceModule(new ServiceModule())//需自行创建
-                .cacheModule(new CacheModule())//需自行创建
-                .build();
+  @Override
+  public void onCreate() {
+    super.onCreate();
+    mApplication = this;
+  }
 
-        if (BuildConfig.LOG_DEBUG) {//Timber日志打印
-            Timber.plant(new Timber.DebugTree());
+  /**
+   * 返回上下文
+   *
+   * @return
+   */
+  public static Context getContext() {
+    return mApplication;
+  }
+  /**
+   * 返回上下文
+   *
+   * @return
+   */
+  public static WEApplication getInstance() {
+    return mApplication;
+  }
+
+  private static String lastMsg = "";
+  private static long lastTime;
+  private static Toast toast;
+
+  public static void showToast(int message) {
+    showToast(message, Toast.LENGTH_SHORT, 0);
+  }
+
+  public static void showToast(String message) {
+    showToast(message, Toast.LENGTH_SHORT, 0, Gravity.FILL_HORIZONTAL
+        | Gravity.TOP);
+  }
+
+  public static void showToast(int message, int icon) {
+    showToast(message, Toast.LENGTH_SHORT, icon);
+  }
+
+  public static void showToast(String message, int icon) {
+    showToast(message, Toast.LENGTH_SHORT, icon, Gravity.FILL_HORIZONTAL
+        | Gravity.TOP);
+  }
+
+  public static void showToastShort(int message) {
+    showToast(message, Toast.LENGTH_SHORT, 0);
+  }
+
+  public static void showToastShort(String message) {
+    showToast(message, Toast.LENGTH_SHORT, 0, Gravity.FILL_HORIZONTAL
+        | Gravity.TOP);
+  }
+
+  public static void showToastShort(int message, Object... args) {
+    showToast(message, Toast.LENGTH_SHORT, 0, Gravity.FILL_HORIZONTAL
+        | Gravity.TOP, args);
+  }
+
+  public static void showToast(int message, int duration, int icon) {
+    showToast(message, duration, icon, Gravity.FILL_HORIZONTAL
+        | Gravity.TOP);
+  }
+
+  public static void showToast(int message, int duration, int icon,
+      int gravity) {
+    showToast(mApplication.getString(message), duration, icon, gravity);
+  }
+
+  public static void showToast(int message, int duration, int icon,
+      int gravity, Object... args) {
+    showToast(mApplication.getString(message, args), duration, icon, gravity);
+  }
+
+  /**
+   * 显示自定义的toast
+   *
+   * @param message  toast内容
+   * @param duration toast延迟
+   * @param icon
+   * @param gravity
+   */
+  public static void showToast(String message, int duration, int icon,
+      int gravity) {
+    if (message != null && !message.equalsIgnoreCase("")) {
+      long time = System.currentTimeMillis();
+      if (!message.equalsIgnoreCase(lastMsg)
+          || Math.abs(time - lastTime) > 2000) {
+        View view = LayoutInflater.from(mApplication).inflate(
+            R.layout.layout_toast, null);
+        ((TextView) view.findViewById(R.id.toastTV)).setText(message);
+        if (icon != 0) {
+          ImageView iconIV = (ImageView) view.findViewById(R.id.iconIV);
+          iconIV.setVisibility(View.VISIBLE);
+          iconIV.setImageResource(icon);
         }
-        Fresco.initialize(this, ConfigConstants.getImagePipelineConfig(this));
+        if (toast == null) {
+          toast = new Toast(mApplication);
+        }
+        toast.setView(view);
+        toast.setDuration(duration);
+        toast.show();
+
+        lastMsg = message;
+        lastTime = System.currentTimeMillis();
+      }
     }
-
-    public static boolean isHavePhoto() {
-        return MyUtils.getSharedPreferences().getBoolean(Constants.SHOW_NEWS_PHOTO, true);
-    }
-
-    @Override
-    public String getBaseUrl() {
-        return Api.APP_DOMAIN;
-    }
-
-    /**
-     * 将AppComponent返回出去,供其它地方使用, AppComponent接口中声明的方法返回的实例, 在getAppComponent()拿到对象后都可以直接使用
-     *
-     * @return
-     */
-    public AppComponent getAppComponent() {
-        return mAppComponent;
-    }
-
-
-    /**
-     * 这里可以提供一个全局处理http响应结果的处理类,
-     * 这里可以比客户端提前一步拿到服务器返回的结果,可以做一些操作,比如token超时,重新获取
-     * 默认不实现,如果有需求可以重写此方法
-     *
-     * @return
-     */
-    @Override
-    public GlobeHttpHandler getHttpHandler() {
-        return new GlobeHttpHandler() {
-            @Override
-            public Response onHttpResultResponse(String httpResult, Interceptor.Chain chain, Response response) {
-                //这里可以先客户端一步拿到每一次http请求的结果,可以解析成json,做一些操作,如检测到token过期后
-                //重新请求token,并重新执行请求
-               /* try {
-                    JSONArray array = new JSONArray(httpResult);
-                    JSONObject object = (JSONObject) array.get(0);
-                    String login = object.getString("login");
-                    String avatar_url = object.getString("avatar_url");
-                    Timber.tag(TAG).w("result ------>" + login + "    ||   avatar_url------>" + avatar_url);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }*/
-
-
-                //这里如果发现token过期,可以先请求最新的token,然后在拿新的token放入request里去重新请求
-                //注意在这个回调之前已经调用过proceed,所以这里必须自己去建立网络请求,如使用okhttp使用新的request去请求
-                // create a new request and modify it accordingly using the new token
-//                    Request newRequest = chain.request().newBuilder().header("token", newToken)
-//                            .build();
-
-//                    // retry the request
-//
-//                    response.body().close();
-                //如果使用okhttp将新的请求,请求成功后,将返回的response  return出去即可
-
-                //如果不需要返回新的结果,则直接把response参数返回出去
-                return response;
-            }
-
-            @Override
-            public Request onHttpRequestBefore(Interceptor.Chain chain, Request request) {
-                //如果需要再请求服务器之前做一些操作,则重新返回一个做过操作的的requeat如增加header,不做操作则返回request
-
-                //return chain.request().newBuilder().header("token", tokenId)
-//                .build();
-                return request;
-            }
-        };
-    }
-
-    @Override
-    protected ResponseErroListener getResponseErroListener() {
-        return new ResponseErroListener() {
-            @Override
-            public void handleResponseError(Context context, Exception e) {
-                Timber.tag(TAG).w("------------>" + e.getMessage());
-                WEApplication.showToast("net error");
-//                UiUtils.SnackbarText("net error");
-            }
-        };
-    }
+  }
 }

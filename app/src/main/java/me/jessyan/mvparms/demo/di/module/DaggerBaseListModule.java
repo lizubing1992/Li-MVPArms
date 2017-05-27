@@ -3,8 +3,6 @@
  */
 package me.jessyan.mvparms.demo.di.module;
 
-import com.google.gson.Gson;
-import android.app.Application;
 import com.jess.arms.di.scope.ActivityScope;
 import dagger.Module;
 import dagger.Provides;

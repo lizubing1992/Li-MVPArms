@@ -1,19 +1,12 @@
 package me.jessyan.mvparms.demo.mvp.model;
 
-import android.app.Application;
-
-import com.google.gson.Gson;
+import com.jess.arms.integration.IRepositoryManager;
 import com.jess.arms.mvp.BaseModel;
-
+import io.reactivex.Observable;
+import javax.inject.Inject;
 import me.jessyan.mvparms.demo.mvp.contract.NewsDetailContract;
-import me.jessyan.mvparms.demo.mvp.model.api.cache.CacheManager;
-import me.jessyan.mvparms.demo.mvp.model.api.cache.CommonCache;
 import me.jessyan.mvparms.demo.mvp.model.api.service.CommonService;
-import me.jessyan.mvparms.demo.mvp.model.api.service.ServiceManager;
 import me.jessyan.mvparms.demo.mvp.model.entity.NewsDetailEntity;
-import rx.Observable;
-
-import static com.jess.arms.utils.Preconditions.checkNotNull;
 
 
 /**
@@ -25,27 +18,16 @@ import static com.jess.arms.utils.Preconditions.checkNotNull;
  * 如果想生成Fragment的相关文件,则将上面构建顺序中的Activity换为Fragment,并将Component中inject方法的参数改为此Fragment
  */
 
-/**
- * Created by xing on 2016/12/8.
- */
+public class NewsDetailModel extends BaseModel implements NewsDetailContract.Model {
 
-public class NewsDetailModel extends BaseModel<ServiceManager, CacheManager> implements NewsDetailContract.Model {
-    private Gson mGson;
-    private Application mApplication;
-    private CommonService mCommonService;
-    private CommonCache mCommonCache;
-
-    public NewsDetailModel(ServiceManager serviceManager, CacheManager cacheManager, Gson gson, Application application) {
-        super(serviceManager, cacheManager);
-        this.mGson = gson;
-        this.mApplication = application;
-        this.mCommonService = mServiceManager.getCommonService();
-        this.mCommonCache = mCacheManager.getCommonCache();
+    @Inject
+    public NewsDetailModel(IRepositoryManager repositoryManager){
+        super(repositoryManager);
     }
 
 
     @Override
     public Observable<NewsDetailEntity> getNewsDetail(int id) {
-        return mCommonService.getNewsDetail(id);
+        return mRepositoryManager.obtainRetrofitService(CommonService.class).getNewsDetail(id);
     }
 }

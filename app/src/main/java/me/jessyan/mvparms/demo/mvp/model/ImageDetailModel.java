@@ -1,19 +1,12 @@
 package me.jessyan.mvparms.demo.mvp.model;
 
-import android.app.Application;
-
-import com.google.gson.Gson;
+import com.jess.arms.integration.IRepositoryManager;
 import com.jess.arms.mvp.BaseModel;
-
+import io.reactivex.Observable;
+import javax.inject.Inject;
 import me.jessyan.mvparms.demo.mvp.contract.ImageDetailContract;
-import me.jessyan.mvparms.demo.mvp.model.api.cache.CacheManager;
-import me.jessyan.mvparms.demo.mvp.model.api.cache.CommonCache;
 import me.jessyan.mvparms.demo.mvp.model.api.service.CommonService;
-import me.jessyan.mvparms.demo.mvp.model.api.service.ServiceManager;
 import me.jessyan.mvparms.demo.mvp.model.entity.ImageDetailEntity;
-import rx.Observable;
-
-import static com.jess.arms.utils.Preconditions.checkNotNull;
 
 
 /**
@@ -29,23 +22,16 @@ import static com.jess.arms.utils.Preconditions.checkNotNull;
  * Created by xing on 2016/12/5.
  */
 
-public class ImageDetailModel extends BaseModel<ServiceManager, CacheManager> implements ImageDetailContract.Model {
-    private Gson mGson;
-    private Application mApplication;
-    private CommonService mCommonService;
-    private CommonCache mCommonCache;
+public class ImageDetailModel extends BaseModel implements ImageDetailContract.Model {
 
-    public ImageDetailModel(ServiceManager serviceManager, CacheManager cacheManager, Gson gson, Application application) {
-        super(serviceManager, cacheManager);
-        this.mGson = gson;
-        this.mApplication = application;
-        this.mCommonService = mServiceManager.getCommonService();
-        this.mCommonCache = mCacheManager.getCommonCache();
+    @Inject
+    public ImageDetailModel(IRepositoryManager repositoryManager){
+        super(repositoryManager);
     }
 
 
     @Override
     public Observable<ImageDetailEntity> getImageDetail(int id) {
-        return mCommonService.getImageDetail(id);
+        return mRepositoryManager.obtainRetrofitService(CommonService.class).getImageDetail(id);
     }
 }

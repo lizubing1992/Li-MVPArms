@@ -5,8 +5,6 @@ import android.app.Application;
 import com.jess.arms.base.BaseActivity;
 import com.jess.arms.di.scope.ActivityScope;
 import com.jess.arms.mvp.BasePresenter;
-import com.jess.arms.utils.PermissionUtil;
-import com.tbruyelle.rxpermissions.RxPermissions;
 
 /**
  * 通过Template生成对应页面的MVP和Dagger代码,请注意输入框中输入的名字必须相同
@@ -17,17 +15,15 @@ import com.tbruyelle.rxpermissions.RxPermissions;
  * 如果想生成Fragment的相关文件,则将上面构建顺序中的Activity换为Fragment,并将Component中inject方法的参数改为此Fragment
  */
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import javax.inject.Inject;
 
 import me.jessyan.mvparms.demo.mvp.contract.NewsDetailContract;
 import me.jessyan.mvparms.demo.mvp.model.entity.NewsDetailEntity;
-import me.jessyan.mvparms.demo.mvp.model.entity.NewsListEntity;
 import me.jessyan.rxerrorhandler.core.RxErrorHandler;
 import me.jessyan.rxerrorhandler.handler.ErrorHandleSubscriber;
 import me.jessyan.rxerrorhandler.handler.RetryWithDelay;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by xing on 2016/12/8.
@@ -37,39 +33,24 @@ import rx.schedulers.Schedulers;
 public class NewsDetailPresenter extends BasePresenter<NewsDetailContract.Model, NewsDetailContract.View> {
     private RxErrorHandler mErrorHandler;
     private Application mApplication;
-    private RxPermissions mRxPermissions;
 
     @Inject
     public NewsDetailPresenter(NewsDetailContract.Model model, NewsDetailContract.View rootView
-            , RxErrorHandler handler, Application application, RxPermissions rxPermissions) {
+            , RxErrorHandler handler, Application application) {
         super(model, rootView);
         this.mErrorHandler = handler;
         this.mApplication = application;
-        this.mRxPermissions = rxPermissions;
     }
 
    public void getNewsDetail(int id){
-       PermissionUtil.externalStorage(new PermissionUtil.RequestPermission() {
-           @Override
-           public void onRequestPermissionSuccess() {
-
-           }
-       }, mRxPermissions, mRootView, mErrorHandler);
-
        mModel.getNewsDetail(id).subscribeOn(Schedulers.io())
                .retryWhen(new RetryWithDelay(3,2))
-               .doOnSubscribe(new Action0() {
-                   @Override
-                   public void call() {
+               .doOnSubscribe(disposable ->  {
                        mRootView.showLoading();
-                   }
                }).subscribeOn(AndroidSchedulers.mainThread())
                .observeOn(AndroidSchedulers.mainThread())
-               .doAfterTerminate(new Action0() {
-                   @Override
-                   public void call() {
+               .doAfterTerminate(()-> {
                        mRootView.hideLoading();
-                   }
                }).compose(((BaseActivity)mRootView).<NewsDetailEntity>bindToLifecycle())
                 .subscribe(new ErrorHandleSubscriber<NewsDetailEntity>(mErrorHandler) {
                     @Override
@@ -78,4 +59,12 @@ public class NewsDetailPresenter extends BasePresenter<NewsDetailContract.Model,
                     }
                 });
    }
+
+
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    this.mErrorHandler = null;
+    this.mApplication = null;
+  }
 }

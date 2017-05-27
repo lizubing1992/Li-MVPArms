@@ -1,15 +1,13 @@
 package me.jessyan.mvparms.demo.base;
 
 import android.widget.AbsListView;
-import com.jess.arms.R;
-import com.jess.arms.base.BaseFragment;
 import com.jess.arms.mvp.BasePresenter;
 import java.util.List;
+import me.jessyan.mvparms.demo.R;
 import me.jessyan.mvparms.demo.app.WEApplication;
-import me.jessyan.mvparms.demo.di.component.AppComponent;
 import me.jessyan.mvparms.demo.widget.EmptyLayout;
 
-public abstract class BaseListFragment<P extends BasePresenter> extends BaseFragment<P> {
+public abstract class BaseListFragment<P extends BasePresenter> extends BaseRefreshFragment<P> {
 
     protected int mState = STATE_NONE;
     protected int pageSize = 10; //一页加载的条数
@@ -18,17 +16,6 @@ public abstract class BaseListFragment<P extends BasePresenter> extends BaseFrag
 
     protected BaseListAdapter mListAdapter;
     protected AbsListView mListView;
-
-    protected WEApplication mWeApplication;
-    @Override
-    protected void ComponentInject() {
-        mWeApplication = (WEApplication)mActivity.getApplication();
-        setupFragmentComponent(mWeApplication.getAppComponent());
-    }
-
-    //提供AppComponent(提供所有的单例对象)给子类，进行Component依赖
-    protected abstract void setupFragmentComponent(AppComponent appComponent);
-
     // 请求列表数据
     protected abstract void requestList(boolean isCache);
 

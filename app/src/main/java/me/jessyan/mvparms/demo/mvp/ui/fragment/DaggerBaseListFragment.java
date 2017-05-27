@@ -5,15 +5,19 @@ package me.jessyan.mvparms.demo.mvp.ui.fragment;
 
 import static com.jess.arms.utils.Preconditions.checkNotNull;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 import butterknife.BindView;
+import com.jess.arms.di.component.AppComponent;
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import me.jessyan.mvparms.demo.R;
 import me.jessyan.mvparms.demo.app.WEApplication;
 import me.jessyan.mvparms.demo.base.BaseListFragment;
-import me.jessyan.mvparms.demo.di.component.AppComponent;
 import me.jessyan.mvparms.demo.di.component.DaggerDaggerBaseListComponent;
 import me.jessyan.mvparms.demo.di.module.DaggerBaseListModule;
 import me.jessyan.mvparms.demo.mvp.contract.DaggerBaseListContract;
@@ -37,8 +41,10 @@ public class DaggerBaseListFragment extends BaseListFragment<DaggerBaseListPrese
   protected int id = 1;
   protected String cacheName = "";
   protected String url = "";
+
+
   @Override
-  protected void setupFragmentComponent(AppComponent appComponent) {
+  public void setupFragmentComponent(AppComponent appComponent) {
     DaggerDaggerBaseListComponent
         .builder()
         .appComponent(appComponent)
@@ -72,14 +78,25 @@ public class DaggerBaseListFragment extends BaseListFragment<DaggerBaseListPrese
   }
 
   @Override
+  public void launchActivity(Intent intent) {
+
+  }
+
+  @Override
+  public void killMyself() {
+
+  }
+
+  @Override
   public void loadListData(String  list,boolean isSuccess) {
 
   }
 
 
   @Override
-  protected int getLayoutId() {
-    return R.layout.activity_user;
+  public View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    rootView = inflater.inflate(R.layout.activity_user,null,false);
+    return rootView;
   }
 
   @Override

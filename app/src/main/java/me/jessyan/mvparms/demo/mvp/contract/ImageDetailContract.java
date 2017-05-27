@@ -1,10 +1,9 @@
 package me.jessyan.mvparms.demo.mvp.contract;
 
-import com.jess.arms.mvp.BaseView;
-
+import com.jess.arms.mvp.IModel;
+import com.jess.arms.mvp.IView;
+import io.reactivex.Observable;
 import me.jessyan.mvparms.demo.mvp.model.entity.ImageDetailEntity;
-import retrofit2.http.Query;
-import rx.Observable;
 
 /**
  * 通过Template生成对应页面的MVP和Dagger代码,请注意输入框中输入的名字必须相同
@@ -21,12 +20,12 @@ import rx.Observable;
 
 public interface ImageDetailContract {
     //对于经常使用的关于UI的方法可以定义到BaseView中,如显示隐藏进度条,和显示文字消息
-    interface View extends BaseView {
+    interface View extends IView {
            void setImageDetail(ImageDetailEntity entity);
     }
 
     //Model层定义接口,外部只需关心model返回的数据,无需关心内部细节,及是否使用缓存
-    interface Model {
+    interface Model extends IModel {
         Observable<ImageDetailEntity> getImageDetail(int id);
     }
 }

@@ -1,17 +1,10 @@
 package me.jessyan.mvparms.demo.di.module;
 
-import com.google.gson.Gson;
-
-import android.app.Application;
-
 import com.jess.arms.di.scope.ActivityScope;
-
 import dagger.Module;
 import dagger.Provides;
 import me.jessyan.mvparms.demo.mvp.contract.NewsDetailContract;
 import me.jessyan.mvparms.demo.mvp.model.NewsDetailModel;
-import me.jessyan.mvparms.demo.mvp.model.api.cache.CacheManager;
-import me.jessyan.mvparms.demo.mvp.model.api.service.ServiceManager;
 
 /**
  * 通过Template生成对应页面的MVP和Dagger代码,请注意输入框中输入的名字必须相同
@@ -46,8 +39,7 @@ public class NewsDetailModule {
 
     @ActivityScope
     @Provides
-    NewsDetailContract.Model provideNewsDetailModel(ServiceManager serviceManager, CacheManager cacheManager
-            , Gson gson, Application application) {
-        return new NewsDetailModel(serviceManager, cacheManager, gson, application);
+    NewsDetailContract.Model provideNewsDetailModel(NewsDetailModel model) {
+        return model;
     }
 }

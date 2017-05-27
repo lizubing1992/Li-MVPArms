@@ -10,17 +10,16 @@ import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.jess.arms.utils.UiUtils;
+import com.jess.arms.di.component.AppComponent;
 import me.jessyan.mvparms.demo.R;
 import me.jessyan.mvparms.demo.app.WEApplication;
-import me.jessyan.mvparms.demo.di.component.AppComponent;
+import me.jessyan.mvparms.demo.base.BaseRefreshActivity;
 import me.jessyan.mvparms.demo.di.component.DaggerImageDetailComponent;
 import me.jessyan.mvparms.demo.di.module.ImageDetailModule;
 import me.jessyan.mvparms.demo.mvp.contract.ImageDetailContract;
 import me.jessyan.mvparms.demo.mvp.model.entity.ImageDetailEntity;
 import me.jessyan.mvparms.demo.mvp.presenter.ImageDetailPresenter;
 import me.jessyan.mvparms.demo.mvp.ui.adapter.ImageDetailAdapter;
-import me.jessyan.mvparms.demo.mvp.ui.common.WEActivity;
 import me.jessyan.mvparms.demo.widget.EmptyLayout;
 import me.jessyan.mvparms.demo.widget.PhotoViewPager;
 import timber.log.Timber;
@@ -38,7 +37,7 @@ import timber.log.Timber;
  * Created by xing on 2016/12/5.
  */
 
-public class ImageDetailActivity extends WEActivity<ImageDetailPresenter> implements ImageDetailContract.View {
+public class ImageDetailActivity extends BaseRefreshActivity<ImageDetailPresenter> implements ImageDetailContract.View {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.viewpager)
@@ -52,7 +51,7 @@ public class ImageDetailActivity extends WEActivity<ImageDetailPresenter> implem
     private int id;
 
     @Override
-    protected void setupActivityComponent(AppComponent appComponent) {
+    public void setupActivityComponent(AppComponent appComponent) {
         DaggerImageDetailComponent
                 .builder()
                 .appComponent(appComponent)
@@ -65,7 +64,7 @@ public class ImageDetailActivity extends WEActivity<ImageDetailPresenter> implem
     @Override
     protected void loadData() {
         id = getIntent().getIntExtra("imageDetailId", 1);
-        setupBackIcon(toolbar);
+        setupBackIcon();
         mPresenter.requestImageDetail(id);
     }
 
@@ -88,14 +87,29 @@ public class ImageDetailActivity extends WEActivity<ImageDetailPresenter> implem
     }
 
     @Override
+    public void launchActivity(Intent intent) {
+
+    }
+
+    @Override
+    public void killMyself() {
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
     }
 
     @Override
-    protected int getLayoutId() {
+    public int initView(Bundle savedInstanceState) {
         return R.layout.activity_image_detail;
+    }
+
+    @Override
+    protected void ComponentInject() {
+
     }
 
     @Override

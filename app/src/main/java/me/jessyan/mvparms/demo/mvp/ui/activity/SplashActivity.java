@@ -1,27 +1,23 @@
 package me.jessyan.mvparms.demo.mvp.ui.activity;
 
+import static com.jess.arms.utils.Preconditions.checkNotNull;
+
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.jess.arms.utils.UiUtils;
-
 import butterknife.BindView;
+import com.jess.arms.di.component.AppComponent;
 import me.jessyan.mvparms.demo.R;
 import me.jessyan.mvparms.demo.app.WEApplication;
-import me.jessyan.mvparms.demo.di.component.AppComponent;
+import me.jessyan.mvparms.demo.base.BaseRefreshActivity;
 import me.jessyan.mvparms.demo.di.component.DaggerSplashComponent;
 import me.jessyan.mvparms.demo.di.module.SplashModule;
 import me.jessyan.mvparms.demo.mvp.contract.SplashContract;
 import me.jessyan.mvparms.demo.mvp.presenter.SplashPresenter;
-import me.jessyan.mvparms.demo.mvp.ui.common.WEActivity;
-
-import static com.jess.arms.utils.Preconditions.checkNotNull;
 
 /**
  * 通过Template生成对应页面的MVP和Dagger代码,请注意输入框中输入的名字必须相同
@@ -36,7 +32,7 @@ import static com.jess.arms.utils.Preconditions.checkNotNull;
  * Created by xing on 2016/12/9.
  */
 
-public class SplashActivity extends WEActivity<SplashPresenter> implements SplashContract.View {
+public class SplashActivity extends BaseRefreshActivity<SplashPresenter> implements SplashContract.View {
     @BindView(R.id.splash_image)
     ImageView mSplashImage;
 
@@ -47,7 +43,7 @@ public class SplashActivity extends WEActivity<SplashPresenter> implements Splas
     TextView mCopyright;
 
     @Override
-    protected void setupActivityComponent(AppComponent appComponent) {
+    public void setupActivityComponent(AppComponent appComponent) {
         DaggerSplashComponent
                 .builder()
                 .appComponent(appComponent)
@@ -56,6 +52,10 @@ public class SplashActivity extends WEActivity<SplashPresenter> implements Splas
                 .inject(this);
     }
 
+    @Override
+    public int initView(Bundle savedInstanceState) {
+        return R.layout.activity_splash;
+    }
 
     @Override
     protected void loadData() {
@@ -78,6 +78,16 @@ public class SplashActivity extends WEActivity<SplashPresenter> implements Splas
         checkNotNull(message);
         WEApplication.showToast(message);
 //        UiUtils.SnackbarText(message);
+    }
+
+    @Override
+    public void launchActivity(Intent intent) {
+
+    }
+
+    @Override
+    public void killMyself() {
+
     }
 
 
@@ -107,8 +117,9 @@ public class SplashActivity extends WEActivity<SplashPresenter> implements Splas
         return super.onKeyDown(keyCode, event);
     }
 
+
     @Override
-    protected int getLayoutId() {
-        return R.layout.activity_splash;
+    protected void ComponentInject() {
+
     }
 }

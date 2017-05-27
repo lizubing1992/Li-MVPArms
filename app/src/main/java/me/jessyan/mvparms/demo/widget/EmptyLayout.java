@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.jess.arms.utils.DeviceUtils;
 import com.jess.arms.utils.UiUtils;
 
 import me.jessyan.mvparms.demo.R;
@@ -144,7 +145,7 @@ public class EmptyLayout extends LinearLayout implements
         case NETWORK_ERROR:
             mErrorState = NETWORK_ERROR;
             // img.setBackgroundDrawable(SkinsUtil.getDrawable(context,"pagefailed_bg"));
-            if (UiUtils.hasInternet()) {
+            if (DeviceUtils.hasInternet(getContext())) {
                 tv.setText(R.string.error_view_load_error_click_to_refresh);
                 img.setBackgroundResource(R.drawable.pagefailed_bg);
             } else {

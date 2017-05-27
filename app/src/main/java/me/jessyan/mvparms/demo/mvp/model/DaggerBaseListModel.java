@@ -6,20 +6,20 @@ package me.jessyan.mvparms.demo.mvp.model;
 import android.app.Application;
 import com.google.gson.Gson;
 import com.jess.arms.di.scope.ActivityScope;
+import com.jess.arms.integration.IRepositoryManager;
 import com.jess.arms.mvp.BaseModel;
-import io.rx_cache.DynamicKey;
-import io.rx_cache.EvictDynamicKey;
-import io.rx_cache.Reply;
+import com.jess.arms.utils.LogUtils;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Function;
+import io.rx_cache2.DynamicKey;
+import io.rx_cache2.EvictDynamicKey;
+import io.rx_cache2.Reply;
 import javax.inject.Inject;
 import me.jessyan.mvparms.demo.mvp.contract.DaggerBaseListContract;
-import me.jessyan.mvparms.demo.mvp.model.api.cache.CacheManager;
 import me.jessyan.mvparms.demo.mvp.model.api.cache.CommonCache;
 import me.jessyan.mvparms.demo.mvp.model.api.service.CommonService;
-import me.jessyan.mvparms.demo.mvp.model.api.service.ServiceManager;
-import me.jessyan.mvparms.demo.mvp.model.entity.BaseEntity;
-import me.jessyan.mvparms.demo.mvp.model.entity.ImageEntity;
-import rx.Observable;
-import rx.functions.Func1;
 import timber.log.Timber;
 
 
@@ -29,44 +29,26 @@ import timber.log.Timber;
  * @author: lizubing
  */
 @ActivityScope
-public class DaggerBaseListModel extends BaseModel<ServiceManager, CacheManager> implements
+public class DaggerBaseListModel extends BaseModel implements
     DaggerBaseListContract.Model {
-
-  private Gson mGson;
-  private Application mApplication;
-  private CommonService mCommonService;
-  private CommonCache mCommonCache;
-
   @Inject
-  public DaggerBaseListModel(ServiceManager serviceManager, CacheManager cacheManager, Gson gson,
-      Application application) {
-    super(serviceManager, cacheManager);
-    this.mGson = gson;
-    this.mApplication = application;
-    this.mCommonService = mServiceManager.getCommonService();
-    this.mCommonCache = mCacheManager.getCommonCache();
-  }
-
-  @Override
-  public void onDestory() {
-    super.onDestory();
-    this.mGson = null;
-    this.mApplication = null;
+  public DaggerBaseListModel(IRepositoryManager repositoryManager) {
+    super(repositoryManager);
   }
 
   @Override
   public Observable<String> getListData(String url,String cacheName, int page, int id, boolean update) {
-    Observable<String> imageList = mCommonService
+    Observable<String> imageList = mRepositoryManager.obtainRetrofitService(CommonService.class)
         .getListData(url,page, id);
     //使用rxcache缓存,上拉刷新则不读取缓存,加载更多读取缓存
-    return mCommonCache
+    return mRepositoryManager.obtainCacheService(CommonCache.class)
         .getListData(imageList
             , new DynamicKey(cacheName + page)
             , new EvictDynamicKey(update))
-        .flatMap(new Func1<Reply<String>, Observable<String>>() {
+        .flatMap(new Function<Reply<String>, ObservableSource<String>>() {
           @Override
-          public Observable<String> call(Reply<String> listReply) {
-            return Observable.just(listReply.getData());
+          public ObservableSource<String> apply(@NonNull Reply<String> stringReply) throws Exception {
+            return Observable.just(stringReply.getData());
           }
         });
   }

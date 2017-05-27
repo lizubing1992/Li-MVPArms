@@ -4,14 +4,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import me.jessyan.mvparms.demo.R;
-import me.jessyan.mvparms.demo.di.component.AppComponent;
-import me.jessyan.mvparms.demo.mvp.ui.common.WEFragment;
+import me.jessyan.mvparms.demo.base.BaseRefreshFragment;
 import me.jessyan.mvparms.demo.widget.CircularProgressBar;
 import photoview.ImageDownloadListener;
 import photoview.PhotoView;
@@ -29,7 +25,7 @@ import photoview.PhotoView;
  * Created by xing on 2016/12/5.
  */
 
-public class PhotoDetailFragment extends WEFragment {
+public class PhotoDetailFragment extends BaseRefreshFragment {
 
 
     @BindView(R.id.photo_view)
@@ -40,16 +36,17 @@ public class PhotoDetailFragment extends WEFragment {
     TextView level;
     private String iamgeUrl;
 
+
+    @Override
+    public View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.fragment_news_photo_detail,null,false);
+        return rootView;
+    }
+
     public static PhotoDetailFragment newInstance() {
         PhotoDetailFragment fragment = new PhotoDetailFragment();
         return fragment;
     }
-
-    @Override
-    protected void setupFragmentComponent(AppComponent appComponent) {
-    }
-
-
     @Override
     protected void loadData() {
         Bundle bundle = getArguments();
@@ -78,9 +75,4 @@ public class PhotoDetailFragment extends WEFragment {
         });
     }
 
-
-    @Override
-    protected int getLayoutId() {
-        return 0;
-    }
 }

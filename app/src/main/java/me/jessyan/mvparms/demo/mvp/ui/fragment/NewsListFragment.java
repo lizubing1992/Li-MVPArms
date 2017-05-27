@@ -76,7 +76,6 @@ public class NewsListFragment extends DaggerBaseListFragment{
     public void showMessage(@NonNull String message) {
         checkNotNull(message);
         WEApplication.showToast(message);
-//        UiUtils.SnackbarText(message);
     }
 
 

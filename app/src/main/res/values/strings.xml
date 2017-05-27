@@ -4,7 +4,6 @@
     <string name="photo_news">图片新闻</string>
     <string name="photo_detail_title">%1$d/%2$d　%3$s</string>
     <string name="error_view_click_to_refresh">点击屏幕,重新加载</string>
-    <string name="error_view_no_data">暂无内容</string>
     <string name="error_view_loading">加载中…</string>
     <string name="error_view_load_error_click_to_refresh">内容加载失败\r\n点击重新加载</string>
     <string name="error_view_network_error_click_to_refresh">没有可用的网络</string>
@@ -13,6 +12,19 @@
     <string name="comm_error_resultIllegal">数据异常</string>
     <string name="double_click_exit">再按一次退出</string>
     <string name="picture">图片</string>
+    <!-- loading state -->
+    <string name="loading">加载中...</string>
+    <string name="loading_no_more">已全部加载完</string>
+    <string name="loading_net_error">网络出错了</string>
+    <string name="loading_hintReload">重新加载</string>
+    <!-- loading state for activity -->
+    <string name="error_view_no_data">暂无数据</string>
+    <string name="error_view_load_error">加载失败，点击重试</string>
+    <string name="error_view_no_network">无可用的网络</string>
+    <integer-array name="ptr_color_array">
+        <item>@color/ptr_color1</item>
+    </integer-array>
+
     <!-- 共享过度动画 -->
     <string name="transition_photos">transition_animation_news_photos</string>
     <string name="news_from">%1$s %2$s</string>

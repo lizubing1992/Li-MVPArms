@@ -24,6 +24,18 @@
     </style>
 
 
+    <!-- Loading对话框Style -->
+    <style name="LoadProgressStyle" parent="@android:style/Theme.Dialog">
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:background">@color/transparent</item>
+        <item name="android:windowBackground">@color/transparent</item>
+    </style>
+
+
     <!-- Activity切换动画 -->
     <style name="ActivityTransitions" parent="@android:style/Animation">
         <item name="android:activityOpenEnterAnimation">@anim/activity_open_enter_slide_in_left

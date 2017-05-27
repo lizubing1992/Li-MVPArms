@@ -1,5 +1,7 @@
 package me.jessyan.mvparms.demo.mvp.ui.activity;
 
+import static com.jess.arms.utils.Preconditions.checkNotNull;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,36 +11,28 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.jess.arms.utils.UiUtils;
-
-import java.util.concurrent.TimeUnit;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.jess.arms.di.component.AppComponent;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import java.util.concurrent.TimeUnit;
 import me.jessyan.mvparms.demo.R;
 import me.jessyan.mvparms.demo.app.FrescoHelper;
 import me.jessyan.mvparms.demo.app.WEApplication;
-import me.jessyan.mvparms.demo.di.component.AppComponent;
+import me.jessyan.mvparms.demo.base.BaseRefreshActivity;
 import me.jessyan.mvparms.demo.di.component.DaggerNewsDetailComponent;
 import me.jessyan.mvparms.demo.di.module.NewsDetailModule;
 import me.jessyan.mvparms.demo.mvp.contract.NewsDetailContract;
 import me.jessyan.mvparms.demo.mvp.model.entity.NewsDetailEntity;
 import me.jessyan.mvparms.demo.mvp.presenter.NewsDetailPresenter;
-import me.jessyan.mvparms.demo.mvp.ui.common.WEActivity;
 import me.jessyan.mvparms.demo.utils.MyUtils;
 import me.jessyan.mvparms.demo.utils.TransformUtils;
-import rx.Observable;
-import rx.Subscriber;
-import rx.Subscription;
-
-import static com.jess.arms.utils.Preconditions.checkNotNull;
 
 /**
  * 通过Template生成对应页面的MVP和Dagger代码,请注意输入框中输入的名字必须相同
@@ -53,9 +47,7 @@ import static com.jess.arms.utils.Preconditions.checkNotNull;
  * Created by xing on 2016/12/8.
  */
 
-public class NewsDetailActivity extends WEActivity<NewsDetailPresenter> implements NewsDetailContract.View {
-
-
+public class NewsDetailActivity extends BaseRefreshActivity<NewsDetailPresenter> implements NewsDetailContract.View {
     @BindView(R.id.news_detail_photo_iv)
     SimpleDraweeView newsDetailPhotoIv;
     @BindView(R.id.mask_view)
@@ -75,10 +67,10 @@ public class NewsDetailActivity extends WEActivity<NewsDetailPresenter> implemen
     @BindView(R.id.fab)
     FloatingActionButton mFab;
     private String mNewsTitle;
-    protected Subscription mSubscription;
+    private Disposable disposable;
 
     @Override
-    protected void setupActivityComponent(AppComponent appComponent) {
+    public void setupActivityComponent(AppComponent appComponent) {
         DaggerNewsDetailComponent
                 .builder()
                 .appComponent(appComponent)
@@ -91,7 +83,6 @@ public class NewsDetailActivity extends WEActivity<NewsDetailPresenter> implemen
     @Override
     protected void loadData() {
         int newsId = getIntent().getIntExtra("newsId", 1);
-        setupBackIcon(toolbar);
         mPresenter.getNewsDetail(newsId);
     }
 
@@ -112,6 +103,16 @@ public class NewsDetailActivity extends WEActivity<NewsDetailPresenter> implemen
         WEApplication.showToast(message);
     }
 
+    @Override
+    public void launchActivity(Intent intent) {
+
+    }
+
+    @Override
+    public void killMyself() {
+
+    }
+
 
     @Override
     public void loadData(NewsDetailEntity newsDetail) {
@@ -128,11 +129,11 @@ public class NewsDetailActivity extends WEActivity<NewsDetailPresenter> implemen
     }
 
     private void setNewsDetailBodyTv(final NewsDetailEntity newsDetail, final String newsBody) {
-        mSubscription = Observable.timer(500, TimeUnit.MILLISECONDS)
+        Observable.timer(500, TimeUnit.MILLISECONDS)
                 .compose(TransformUtils.<Long>defaultSchedulers())
-                .subscribe(new Subscriber<Long>() {
+                .subscribe(new Observer<Long>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                         mProgressBar.setVisibility(View.GONE);
                         mFab.setVisibility(View.VISIBLE);
                     }
@@ -143,10 +144,16 @@ public class NewsDetailActivity extends WEActivity<NewsDetailPresenter> implemen
                     }
 
                     @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        disposable = d;
+                    }
+
+                    @Override
                     public void onNext(Long aLong) {
                         mNewsDetailBodyTv.setText(Html.fromHtml(newsBody));
                     }
                 });
+
     }
 
 
@@ -163,13 +170,20 @@ public class NewsDetailActivity extends WEActivity<NewsDetailPresenter> implemen
     }
 
     @Override
-    protected int getLayoutId() {
+    public int initView(Bundle savedInstanceState) {
         return R.layout.activity_new_detail;
+    }
+
+    @Override
+    protected void ComponentInject() {
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        MyUtils.cancelSubscription(mSubscription);
+        if(disposable != null){
+            disposable.dispose();
+        }
     }
 }

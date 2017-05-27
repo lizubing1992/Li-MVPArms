@@ -5,18 +5,13 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-
 import com.google.gson.Gson;
+import com.jess.arms.integration.IRepositoryManager;
 import com.jess.arms.mvp.BaseModel;
-
 import java.util.Calendar;
-
+import javax.inject.Inject;
 import me.jessyan.mvparms.demo.R;
 import me.jessyan.mvparms.demo.mvp.contract.SplashContract;
-import me.jessyan.mvparms.demo.mvp.model.api.cache.CacheManager;
-import me.jessyan.mvparms.demo.mvp.model.api.service.ServiceManager;
-
-import static com.jess.arms.utils.Preconditions.checkNotNull;
 
 
 /**
@@ -32,14 +27,13 @@ import static com.jess.arms.utils.Preconditions.checkNotNull;
  * Created by xing on 2016/12/9.
  */
 
-public class SplashModel extends BaseModel<ServiceManager, CacheManager> implements SplashContract.Model {
+public class SplashModel extends BaseModel implements SplashContract.Model {
     private Gson mGson;
     private Application mApplication;
 
-    public SplashModel(ServiceManager serviceManager, CacheManager cacheManager, Gson gson, Application application) {
-        super(serviceManager, cacheManager);
-        this.mGson = gson;
-        this.mApplication = application;
+    @Inject
+    public SplashModel(IRepositoryManager repositoryManager) {
+        super(repositoryManager);
     }
 
 

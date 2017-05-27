@@ -14,13 +14,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.jessyan.mvparms.demo.R;
+import me.jessyan.mvparms.demo.base.BaseRefreshFragment;
 import me.jessyan.mvparms.demo.mvp.ui.activity.WebViewActivity;
 
 /**
  * Created by xing on 2016/12/9.
  */
 
-public class UserFragment extends BaseFragment {
+public class UserFragment extends BaseRefreshFragment {
     @BindView(R.id.tv_game_time)
     ImageView tvGameTime;
     @BindView(R.id.ll_author)
@@ -33,15 +34,10 @@ public class UserFragment extends BaseFragment {
     LinearLayout llDemonstrate;
 
     @Override
-    protected void ComponentInject() {
-
+    public View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.fragment_user,null,false);
+        return rootView;
     }
-
-    @Override
-    protected int getLayoutId() {
-        return R.layout.fragment_user;
-    }
-
 
     private void showWebView(String title,String url){
         Intent intent = new Intent(mActivity, WebViewActivity.class);

@@ -3,21 +3,18 @@ package me.jessyan.mvparms.demo.mvp.ui.activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import com.jess.arms.mvp.BasePresenter;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.jess.arms.di.component.AppComponent;
+import com.jess.arms.mvp.BasePresenter;
 import me.jessyan.mvparms.demo.R;
-import me.jessyan.mvparms.demo.di.component.AppComponent;
-import me.jessyan.mvparms.demo.mvp.ui.common.WEActivity;
+import me.jessyan.mvparms.demo.base.BaseRefreshActivity;
 
 /**
  * 通过Template生成对应页面的MVP和Dagger代码,请注意输入框中输入的名字必须相同
@@ -32,7 +29,7 @@ import me.jessyan.mvparms.demo.mvp.ui.common.WEActivity;
  * Created by xing on 2016/12/13.
  */
 
-public class WebViewActivity extends WEActivity<BasePresenter> {
+public class WebViewActivity extends BaseRefreshActivity<BasePresenter> {
 
 
     @BindView(R.id.toolbar)
@@ -46,17 +43,15 @@ public class WebViewActivity extends WEActivity<BasePresenter> {
     private String url;
 
     @Override
-    protected void setupActivityComponent(AppComponent appComponent) {
+    public void setupActivityComponent(AppComponent appComponent) {
 
     }
-
 
     @Override
     protected void loadData() {
         title = getIntent().getStringExtra("title");
         url = getIntent().getStringExtra("url");
         webLoadPB = (ProgressBar) findViewById(R.id.webLoadPB);
-        setupBackIcon(toolbar);
         titleTV.setText(title);
         webView.loadUrl(url);
     }
@@ -93,15 +88,15 @@ public class WebViewActivity extends WEActivity<BasePresenter> {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ButterKnife.bind(this);
+    protected void ComponentInject() {
+
     }
 
     @Override
-    protected int getLayoutId() {
+    public int initView(Bundle savedInstanceState) {
         return R.layout.activity_webview;
     }
+
 
     @Override
     protected void finishActivity() {

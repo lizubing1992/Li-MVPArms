@@ -2,14 +2,16 @@ package me.jessyan.mvparms.demo.mvp.ui.fragment;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import android.view.ViewGroup;
 import com.jess.arms.base.AdapterViewPager;
 import com.jess.arms.base.BaseFragment;
-import com.jess.arms.mvp.BasePresenter;
 
+import me.jessyan.mvparms.demo.base.BaseRefreshFragment;
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
@@ -24,8 +26,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import me.jessyan.mvparms.demo.R;
-import me.jessyan.mvparms.demo.di.component.AppComponent;
-import me.jessyan.mvparms.demo.mvp.ui.common.WEFragment;
 
 /**
  * 通过Template生成对应页面的MVP和Dagger代码,请注意输入框中输入的名字必须相同
@@ -40,7 +40,7 @@ import me.jessyan.mvparms.demo.mvp.ui.common.WEFragment;
  * Created by xing on 2016/12/6.
  */
 
-public class NewsFragment extends BaseFragment{
+public class NewsFragment extends BaseRefreshFragment{
 
     private static final String[] CHANNELS = new String[]{"民生热点", "娱乐热点", "财经热点", "体育热点", "教育热点", "社会热点"};
     @BindView(R.id.magic_indicator1)
@@ -51,13 +51,9 @@ public class NewsFragment extends BaseFragment{
     private List<String> mDataList = Arrays.asList(CHANNELS);
 
     @Override
-    protected int getLayoutId() {
-        return R.layout.fragment_news;
-    }
-
-    @Override
-    protected void ComponentInject() {
-
+    public View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.fragment_news,null,false);
+        return rootView;
     }
 
 

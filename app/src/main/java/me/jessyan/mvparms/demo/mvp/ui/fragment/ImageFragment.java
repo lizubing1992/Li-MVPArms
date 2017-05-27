@@ -2,14 +2,20 @@ package me.jessyan.mvparms.demo.mvp.ui.fragment;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v4.app.Fragment;
+import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
-
+import android.view.ViewGroup;
+import butterknife.BindView;
 import com.jess.arms.base.AdapterViewPager;
 import com.jess.arms.base.BaseFragment;
-
+import com.jess.arms.di.component.AppComponent;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import me.jessyan.mvparms.demo.R;
+import me.jessyan.mvparms.demo.base.BaseRefreshFragment;
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
@@ -17,16 +23,6 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNav
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.ClipPagerTitleView;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import butterknife.BindView;
-import me.jessyan.mvparms.demo.R;
-import me.jessyan.mvparms.demo.di.component.AppComponent;
-import me.jessyan.mvparms.demo.mvp.ui.common.WEFragment;
 
 /**
  * 通过Template生成对应页面的MVP和Dagger代码,请注意输入框中输入的名字必须相同
@@ -41,7 +37,7 @@ import me.jessyan.mvparms.demo.mvp.ui.common.WEFragment;
  * Created by xing on 2016/12/6.
  */
 
-public class ImageFragment extends WEFragment {
+public class ImageFragment extends BaseRefreshFragment {
 
     private static final String[] CHANNELS = new String[]{"性感美女", "韩日美女", "丝袜美腿", "美女照片", "美女写真", "清纯美女", "性感车模"};
     @BindView(R.id.magic_indicator1)
@@ -52,17 +48,13 @@ public class ImageFragment extends WEFragment {
     private List<String> mDataList = Arrays.asList(CHANNELS);
 
     @Override
-    protected int getLayoutId() {
-        return R.layout.fragment_image;
+    public View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.fragment_image,null,false);
+        return rootView;
     }
 
     @Override
-    protected void ComponentInject() {
-
-    }
-
-    @Override
-    protected void setupFragmentComponent(AppComponent appComponent) {
+    public void setupFragmentComponent(AppComponent appComponent) {
 
     }
 
@@ -100,12 +92,8 @@ public class ImageFragment extends WEFragment {
                 clipPagerTitleView.setText(mDataList.get(index));
                 clipPagerTitleView.setTextColor(Color.parseColor("#f2c4c4"));
                 clipPagerTitleView.setClipColor(Color.WHITE);
-                clipPagerTitleView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        viewPager.setCurrentItem(index);
-                    }
-                });
+                clipPagerTitleView.setOnClickListener(v->
+                        viewPager.setCurrentItem(index));
                 return clipPagerTitleView;
             }
 

@@ -7,14 +7,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import butterknife.BindView;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.jakewharton.rxbinding.widget.RxTextView;
+import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.jess.arms.utils.KnifeUtil;
+import io.reactivex.Observable;
 import me.jessyan.mvparms.demo.R;
 import me.jessyan.mvparms.demo.app.FrescoHelper;
 import me.jessyan.mvparms.demo.base.BaseListAdapter;
-import me.jessyan.mvparms.demo.mvp.model.entity.ImageEntity;
 import me.jessyan.mvparms.demo.mvp.model.entity.TngouBean;
-import rx.Observable;
 
 /**
  * Created by xing on 2016/12/1.
