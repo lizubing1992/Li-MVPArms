@@ -5,16 +5,33 @@ import static com.jess.arms.utils.Preconditions.checkNotNull;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
+import butterknife.BindView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.jess.arms.di.component.AppComponent;
+import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import java.util.ArrayList;
+import java.util.List;
+import me.jessyan.mvparms.demo.R;
 import me.jessyan.mvparms.demo.app.WEApplication;
+import me.jessyan.mvparms.demo.base.BaseListFragment;
+import me.jessyan.mvparms.demo.di.component.DaggerImageListComponent;
+import me.jessyan.mvparms.demo.di.component.DaggerNewsListComponent;
+import me.jessyan.mvparms.demo.di.module.ImageListModule;
+import me.jessyan.mvparms.demo.di.module.NewsListModule;
+import me.jessyan.mvparms.demo.mvp.contract.NewsListContract;
 import me.jessyan.mvparms.demo.mvp.model.entity.NewsListEntity;
+import me.jessyan.mvparms.demo.mvp.model.entity.NewsListEntity.TngouBean;
+import me.jessyan.mvparms.demo.mvp.presenter.NewsListPresenter;
 import me.jessyan.mvparms.demo.mvp.ui.activity.NewsDetailActivity;
 import me.jessyan.mvparms.demo.mvp.ui.adapter.NewsListAdapter;
+import me.jessyan.mvparms.demo.widget.EmptyLayout;
 import timber.log.Timber;
 
 /**
@@ -30,7 +47,19 @@ import timber.log.Timber;
  * Created by xing on 2016/12/7.
  */
 
-public class NewsListFragment extends DaggerBaseListFragment{
+public class NewsListFragment extends BaseListFragment<NewsListPresenter> implements
+    NewsListContract.View{
+
+
+    @BindView(R.id.ptr)
+    PtrClassicFrameLayout ptr;
+    @BindView(R.id.listView)
+    ListView listView;
+    @BindView(R.id.emptyLayout)
+    EmptyLayout emptyLayout;
+
+    protected int id = 1;
+    protected String cacheName = "";
 
     public static NewsListFragment newInstance(int id,String cacheName) {
         NewsListFragment fragment = new NewsListFragment();
@@ -62,6 +91,17 @@ public class NewsListFragment extends DaggerBaseListFragment{
 
 
     @Override
+    public void setupFragmentComponent(AppComponent appComponent) {
+        DaggerNewsListComponent
+            .builder()
+            .appComponent(appComponent)
+            .newsListModule(new NewsListModule(this))//请将DaggerBaseListModule()第一个首字母改为小写
+            .build()
+            .inject(this);
+    }
+
+
+    @Override
     public void showLoading() {
         Timber.tag(TAG).w("showLoading");
     }
@@ -78,6 +118,16 @@ public class NewsListFragment extends DaggerBaseListFragment{
         WEApplication.showToast(message);
     }
 
+    @Override
+    public void launchActivity(Intent intent) {
+
+    }
+
+    @Override
+    public void killMyself() {
+
+    }
+
 
     @Override
     protected void initView(View rootView) {
@@ -86,8 +136,13 @@ public class NewsListFragment extends DaggerBaseListFragment{
         if(null != bundle) {
             id = bundle.getInt("id", 1);
             cacheName = bundle.getString("cacheName");
-            url = "/api/top/list";
         }
+        setPageSize(20);
+        mListView = listView;
+        mEmptyLayout = emptyLayout;
+        mEmptyLayout.setErrorType(EmptyLayout.NETWORK_LOADING);
+        ((ListView)mListView).setDividerHeight(10);
+        mListView.setOnScrollListener(mScrollListener);
         mListAdapter = new NewsListAdapter();
         mListView.setAdapter(mListAdapter);
         mListView.setOnItemClickListener(new OnItemClickListener() {
@@ -102,10 +157,18 @@ public class NewsListFragment extends DaggerBaseListFragment{
     }
 
     @Override
-    public void loadListData(String  list,boolean isSuccess) {
-        ArrayList<NewsListEntity.TngouBean> mList = new Gson().fromJson(list,
-            new TypeToken<ArrayList<NewsListEntity.TngouBean>>() {
-            }.getType());
-        requestListFinish(true,mList);
+    public View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.activity_user,null,false);
+        return rootView;
+    }
+
+    @Override
+    public void loadListData(List<TngouBean> mList, boolean isSuccess) {
+        requestListFinish(isSuccess,mList);
+    }
+
+    @Override
+    protected void requestList(boolean isCache) {
+        mPresenter.requestList(cacheName, id, isCache);
     }
 }

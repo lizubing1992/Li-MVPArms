@@ -23,16 +23,10 @@ public abstract class SuccessSubscriber<T> extends ErrorHandleSubscriber<T>{
 
   @Override
   public void onNext(T t) {
-    try {
-      JSONObject json = new JSONObject(t.toString());
-      JSONArray array = json.getJSONArray("tngou");
-      Timber.e("array"+array.toString());
-      onSuccess(array.toString());
-    } catch (JSONException e) {
-      e.printStackTrace();
-    }
+
+    onSuccess(t);
   }
 
-  public abstract  void onSuccess(String  baseResponse);
+  public abstract  void onSuccess(T  baseResponse);
 
 }

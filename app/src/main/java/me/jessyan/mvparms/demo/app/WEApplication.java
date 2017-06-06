@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.jess.arms.base.BaseApplication;
 import me.jessyan.mvparms.demo.R;
 
@@ -25,8 +26,16 @@ public class WEApplication extends BaseApplication{
   public void onCreate() {
     super.onCreate();
     mApplication = this;
+    initFresco();
   }
 
+
+  /**
+   * 初始化fresco
+   */
+  private void initFresco() {
+    Fresco.initialize(this, ConfigConstants.getImagePipelineConfig(this));
+  }
   /**
    * 返回上下文
    *
